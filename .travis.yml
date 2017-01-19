@@ -25,4 +25,4 @@ android:
       # - sys-img-armeabi-v7a-android-17
 
 script:
-  - mvn package -e
+  - mvn build -e
