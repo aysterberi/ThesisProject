@@ -30,9 +30,10 @@
                 <version>4.1.1</version>
                 <configuration>
                     <sdk>
-                        <platform>21</platform>
+                        <platform>25</platform>
                     </sdk>
-                    <deleteConflictingFiles>true</deleteConflictingFiles>
+                    <androidManifestFile>${project.basedir}\src\main\AndroidManifest.xml</androidManifestFile>
+                    <resourceDirectory>${project.basedir}\src\main\res</resourceDirectory>
                     <undeployBeforeDeploy>true</undeployBeforeDeploy>
                 </configuration>
                 <extensions>true</extensions>
