@@ -1,4 +1,5 @@
 target/
 .idea/
 *.iml
-/src/main/resources/persons/
+src/main/resources/persons/
+src/test/
