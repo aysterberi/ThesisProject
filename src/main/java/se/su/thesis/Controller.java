@@ -142,7 +142,7 @@ public class Controller {
 
         // detect faces
         if (faceCascade == null) {
-            faceCascade = new CascadeClassifier(Main.class.getResource("src/main/resources/haarcascade_frontalface_alt.xml").getPath().substring(1));
+            faceCascade = new CascadeClassifier("src/main/resources/haarcascade_frontalface_alt.xml");
         }
 
         faceCascade.detectMultiScale(grayFrame, faces, 1.1, 2, Objdetect.CASCADE_SCALE_IMAGE,
@@ -164,8 +164,9 @@ public class Controller {
             try {
                 this.capture.read(frame);
 
-                if (!frame.empty())
+                if (!frame.empty()){
                     faceDetect(frame);
+                }
                 imageToShow = Utils.mat2Image(frame);
                 // Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2GRAY);
             } catch (Exception e) {
