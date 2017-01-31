@@ -215,7 +215,7 @@ public class Controller {
     }
 
     private void createPersonFolder(String name) {
-        File files = new File("persons/" + name + "/");
+        File files = new File("src/main/resources/persons/" + name + "/");
         if (!files.exists()) {
             if (files.mkdirs()) {
                 System.err.println("Directory created");
