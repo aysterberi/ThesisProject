@@ -142,7 +142,7 @@ public class Controller {
 
         // detect faces
         if (faceCascade == null) {
-            faceCascade = new CascadeClassifier(Main.class.getResource("resources/haarcascade_frontalface_alt.xml").getPath().substring(1));
+            faceCascade = new CascadeClassifier(Main.class.getResource("src/main/resources/haarcascade_frontalface_alt.xml").getPath().substring(1));
         }
 
         faceCascade.detectMultiScale(grayFrame, faces, 1.1, 2, Objdetect.CASCADE_SCALE_IMAGE,
