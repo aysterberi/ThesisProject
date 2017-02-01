@@ -32,7 +32,7 @@ public class Controller {
     private static final String LABEL_TEXT = "Current Person: ";
     private Image imageToShow;
     private int faceSize;
-    private HashMap<String, Integer> personLabelMap = new HashMap<>();
+    public static HashMap<String, Integer> personLabelMap = new HashMap<>();
 
     @FXML
     private Button startCameraButton;
