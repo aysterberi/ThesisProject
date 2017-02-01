@@ -64,8 +64,6 @@ public class Controller {
                 Runnable frameGrabber = () -> {
                     imageToShow = getImage();
                     currentFrame.setImage(imageToShow);
-                    // TODO: Scale to the window ^
-                    // updateImageView(currentFrame, imageToShow);
                 };
 
                 this.timer = Executors.newSingleThreadScheduledExecutor();
