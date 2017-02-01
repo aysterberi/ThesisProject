@@ -15,6 +15,7 @@ import se.su.thesis.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -31,6 +32,7 @@ public class Controller {
     private static final String LABEL_TEXT = "Current Person: ";
     private Image imageToShow;
     private int faceSize;
+    private HashMap<String, Integer> personLabelMap = new HashMap<>();
 
     @FXML
     private Button startCameraButton;
@@ -110,7 +112,7 @@ public class Controller {
      * @return an array of directories in the persons folder
      */
     private File[] getExistingPersons() {
-        return new File("persons/").listFiles(File::isDirectory);
+        return new File("src/main/resources/persons/").listFiles(File::isDirectory);
     }
 
     private void stopAcquisition() {
@@ -182,7 +184,7 @@ public class Controller {
             System.err.println("Need to select a person");
             return;
         }
-        String pathToPersonFolder = "persons/" + currentPerson + "/";
+        String pathToPersonFolder = "src/main/resources/persons/" + currentPerson + "/";
         int pictureNumber = checkNumber(pathToPersonFolder);
         new TakePicture(imageToShow, pictureNumber);
     }
@@ -221,6 +223,7 @@ public class Controller {
             if (files.mkdirs()) {
                 System.err.println("Directory created");
                 currentPerson = name;
+                personLabelMap.put(name, personLabelMap.size());
                 personLabel.setText(LABEL_TEXT + name);
             }
             else

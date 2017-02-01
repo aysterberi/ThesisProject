@@ -14,7 +14,7 @@ public class TakePicture {
     }
 
     private void takePicture (Image image, int i) {
-        File outputFile = new File("persons/" + Controller.currentPerson + "/" + i + ".png");
+        File outputFile = new File("src/main/resources/persons/" + Controller.currentPerson + "/" + i + ".png");
         BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
         try {
             ImageIO.write(bImage, "png", outputFile);
