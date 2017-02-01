@@ -28,6 +28,8 @@ public class Controller {
     private ScheduledExecutorService timer;
     private boolean cameraActive = false;
     private static int cameraId = 0;
+    Image imageOfFace;
+    Rect roi;
     static String currentPerson = "";
     private static final String LABEL_TEXT = "Current Person: ";
     private Image imageToShow;
@@ -152,9 +154,10 @@ public class Controller {
 
         // each rectangle in faces is a face: draw them!
         Rect[] facesArray = faces.toArray();
-        for (Rect aFacesArray : facesArray) {
-            Imgproc.rectangle(frame, aFacesArray.tl(), aFacesArray.br(),
+        for (Rect facesRect : facesArray) {
+            Imgproc.rectangle(frame, facesRect.tl(), facesRect.br(),
                     new Scalar(0, 255, 0), 3);
+            roi = facesRect.clone();
         }
     }
 
@@ -170,6 +173,10 @@ public class Controller {
                     faceDetect(frame);
                 }
                 imageToShow = Utils.mat2Image(frame);
+                if (roi != null){
+                    Mat cropped = new Mat(frame, roi);
+                    imageOfFace = Utils.mat2Image(cropped);
+                }
                 // Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2GRAY);
             } catch (Exception e) {
                 System.err.println("Exception during the image elaboration:" + e);
@@ -186,7 +193,10 @@ public class Controller {
         }
         String pathToPersonFolder = "src/main/resources/persons/" + currentPerson + "/";
         int pictureNumber = checkNumber(pathToPersonFolder);
-        new TakePicture(imageToShow, pictureNumber);
+        if (imageOfFace != null){
+            new TakePicture(imageOfFace, pictureNumber);
+        }
+            System.err.println("Face not found");
     }
 
     private int checkNumber(String path) {
