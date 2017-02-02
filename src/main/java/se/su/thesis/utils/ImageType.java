@@ -1,5 +1,5 @@
 package se.su.thesis.utils;
 
-public enum ImageClass {
-    
+public enum ImageType {
+    Training, Test;
 }
