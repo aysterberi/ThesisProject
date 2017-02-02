@@ -15,7 +15,9 @@ import se.su.thesis.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -52,6 +54,8 @@ public class Controller {
     private Menu topMenu;
     @FXML
     private MenuBar menuBar;
+    @FXML
+    private MenuItem trainMenuButton;
 
     @FXML
     protected void startCamera(ActionEvent event) {
@@ -230,10 +234,30 @@ public class Controller {
             if (files.mkdirs()) {
                 System.err.println("Directory created");
                 currentPerson = name;
+                // TODO: We need to recreate/save the hashmap so that we don't need to recreate the training images
+                // TODO: the code already exists somewhat i think because we do some lookups against the directory
                 personLabelMap.put(name, personLabelMap.size());
                 personLabel.setText(LABEL_TEXT + name);
             } else
                 System.err.println("Failed to create directory");
         }
+    }
+
+    @FXML
+    public void openTrainDialog() {
+        if (!personLabelMap.isEmpty()) {
+            ChoiceDialog dialog = new ChoiceDialog(personLabelMap.keySet());
+            dialog.setTitle("Train");
+            dialog.setHeaderText("Train the algorithm with some images");
+            dialog.setContentText("Select the person you wish to train the algorithm on:");
+
+            Optional<String> result = dialog.showAndWait();
+            result.ifPresent(this::trainOnFaces);
+        } else
+            System.err.println("No persons in default folder");
+    }
+
+    private void trainOnFaces(String name) {
+        System.err.println("train on face: " + name);
     }
 }
