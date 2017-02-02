@@ -52,6 +52,10 @@
                         <MenuItem mnemonicParsing="false" onAction="#closeProgram" text="Close" />
                     </items>
                 </Menu>
+            <Menu mnemonicParsing="false" text="Train">
+               <items>
+                  <MenuItem fx:id="trainMenuButton" mnemonicParsing="false" onAction="#openTrainDialog" text="Train..." />
+               </items></Menu>
             </menus>
             <BorderPane.margin>
                 <Insets />
