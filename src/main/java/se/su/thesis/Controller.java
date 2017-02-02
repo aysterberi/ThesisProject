@@ -77,6 +77,7 @@ public class Controller {
                 this.timer = Executors.newSingleThreadScheduledExecutor();
                 this.timer.scheduleAtFixedRate(frameGrabber, 0, 33, TimeUnit.MILLISECONDS);
                 this.pictureButton.setDisable(false);
+                this.testPictureButton.setDisable(false);
                 this.startCameraButton.setText("Stop Camera");
             } else {
                 System.err.println("Impossible to open the camera connection");
@@ -193,15 +194,20 @@ public class Controller {
 
     @FXML
     public void takePicture(ActionEvent actionEvent) throws IOException {
-        System.err.println(actionEvent.toString());
         if (currentPerson.equals("")) {
             System.err.println("Need to select a person");
             return;
         }
+
+        Button b = (Button) actionEvent.getSource();
+
         String pathToPersonFolder = "src/main/resources/persons/" + currentPerson + "/";
         int pictureNumber = checkNumber(pathToPersonFolder);
         if (imageOfFace != null) {
-            new TakePicture(imageOfFace, pictureNumber, ImageType.Training);
+            if (b.getId().equals("pictureButton"))
+                new TakePicture(imageOfFace, pictureNumber, ImageType.Training);
+            else
+                new TakePicture(imageOfFace, pictureNumber, ImageType.Test);
         }
     }
 

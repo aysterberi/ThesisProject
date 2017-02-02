@@ -36,7 +36,7 @@
                      </opaqueInsets>
                   </Button>
                       <Button fx:id="pictureButton" alignment="CENTER" disable="true" mnemonicParsing="false" onAction="#takePicture" text="Snap Training Picture" />
-                  <Button fx:id="testPictureButton" alignment="CENTER" disable="true" mnemonicParsing="false" onAction="#takePicture" text="Snap Test Picture" />
+                      <Button fx:id="testPictureButton" alignment="CENTER" disable="true" mnemonicParsing="false" onAction="#takePicture" text="Snap Test Picture" />
                </children>
                <opaqueInsets>
                   <Insets />
