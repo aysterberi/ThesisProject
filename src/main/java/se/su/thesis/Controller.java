@@ -167,11 +167,11 @@ public class Controller {
             try {
                 this.capture.read(frame);
 
-                if (!frame.empty()){
+                if (!frame.empty()) {
                     faceDetect(frame);
                 }
                 imageToShow = Utils.mat2Image(frame);
-                if (roi != null){
+                if (roi != null) {
                     Mat cropped = new Mat(frame, roi);
                     imageOfFace = Utils.mat2Image(cropped);
                 }
@@ -191,10 +191,9 @@ public class Controller {
         }
         String pathToPersonFolder = "src/main/resources/persons/" + currentPerson + "/";
         int pictureNumber = checkNumber(pathToPersonFolder);
-        if (imageOfFace != null){
+        if (imageOfFace != null) {
             new TakePicture(imageOfFace, pictureNumber);
         }
-            System.err.println("Face not found");
     }
 
     private int checkNumber(String path) {
@@ -233,8 +232,7 @@ public class Controller {
                 currentPerson = name;
                 personLabelMap.put(name, personLabelMap.size());
                 personLabel.setText(LABEL_TEXT + name);
-            }
-            else
+            } else
                 System.err.println("Failed to create directory");
         }
     }
