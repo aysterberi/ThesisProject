@@ -23,6 +23,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static se.su.thesis.utils.Constants.LABEL_TEXT;
+
 public class Controller {
 
     VideoCapture capture = new VideoCapture();
@@ -33,7 +35,6 @@ public class Controller {
     Image imageOfFace;
     Rect roi;
     static String currentPerson = "";
-    private static final String LABEL_TEXT = "Current Person: ";
     private Image imageToShow;
     private int faceSize;
     public static HashMap<String, Integer> personLabelMap = new HashMap<>();

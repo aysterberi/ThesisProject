@@ -9,9 +9,9 @@ import org.opencv.core.Core;
 
 import java.io.File;
 
-public class Main extends Application {
+import static se.su.thesis.utils.Constants.PERSONS_DIRECTORY;
 
-    public static final String PERSONS_DIRECTORY = "src/main/resources/persons/";
+public class Main extends Application {
 
     private void populateMap() {
         File[] persons = new File(PERSONS_DIRECTORY).listFiles(File::isDirectory);
