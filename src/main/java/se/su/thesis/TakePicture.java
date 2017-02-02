@@ -19,6 +19,7 @@ public class TakePicture {
                 Controller.personLabelMap.get(Controller.currentPerson) +
                 "-" + Controller.currentPerson.toLowerCase() + "_" + i + ".png");
         BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
+        System.err.println("Image width: " + bImage.getWidth() + " Image height: " + bImage.getHeight());
         try {
             ImageIO.write(bImage, "png", outputFile);
             System.err.println("Snapped picture");
