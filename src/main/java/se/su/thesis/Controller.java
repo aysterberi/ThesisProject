@@ -11,6 +11,7 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.objdetect.Objdetect;
 import org.opencv.videoio.VideoCapture;
+import se.su.thesis.utils.ImageType;
 import se.su.thesis.utils.Utils;
 
 import java.io.File;
@@ -37,12 +38,14 @@ public class Controller {
     static String currentPerson = "";
     private Image imageToShow;
     private int faceSize;
-    public static HashMap<String, Integer> personLabelMap = new HashMap<>();
+    static HashMap<String, Integer> personLabelMap = new HashMap<>();
 
     @FXML
     private Button startCameraButton;
     @FXML
     private Button pictureButton;
+    @FXML
+    private Button testPictureButton;
     @FXML
     private ImageView currentFrame;
     @FXML
@@ -190,6 +193,7 @@ public class Controller {
 
     @FXML
     public void takePicture(ActionEvent actionEvent) throws IOException {
+        System.err.println(actionEvent.toString());
         if (currentPerson.equals("")) {
             System.err.println("Need to select a person");
             return;
@@ -197,7 +201,7 @@ public class Controller {
         String pathToPersonFolder = "src/main/resources/persons/" + currentPerson + "/";
         int pictureNumber = checkNumber(pathToPersonFolder);
         if (imageOfFace != null) {
-            new TakePicture(imageOfFace, pictureNumber);
+            new TakePicture(imageOfFace, pictureNumber, ImageType.Training);
         }
     }
 

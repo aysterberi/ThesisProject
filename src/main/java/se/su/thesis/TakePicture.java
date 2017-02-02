@@ -3,6 +3,7 @@ package se.su.thesis;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import net.coobird.thumbnailator.Thumbnails;
+import se.su.thesis.utils.ImageType;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -10,11 +11,18 @@ import java.io.File;
 import java.io.IOException;
 
 public class TakePicture {
-    public TakePicture(Image image, int i) throws IOException {
-        takePicture(image, i);
+    public TakePicture(Image image, int i, ImageType type) throws IOException {
+        if (type == ImageType.Training)
+            takePicture(image, i);
+        else
+            takeTestPicture(image);
     }
 
-    private void takePicture (Image image, int i) {
+    private void takeTestPicture(Image image) {
+        // TODO: Implement
+    }
+
+    private void takePicture(Image image, int i) {
         File outputFile = new File("src/main/resources/persons/" +
                 Controller.currentPerson + "/" +
                 Controller.personLabelMap.get(Controller.currentPerson) +
