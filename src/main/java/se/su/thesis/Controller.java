@@ -95,8 +95,6 @@ public class Controller {
      * If any folders exist they will be put in the menu
      * This only works after you open the menu once and open it again
      * TODO: Fix above behaviour
-     * TODO: Some code need to be written so pictures are scanned from the right folder
-     * TODO: At the time only the label is set to the name selected in the menu
      */
     @FXML
     public void setUpExistingPersonsMenu() {
