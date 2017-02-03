@@ -21,7 +21,7 @@ public class TakePicture {
     }
 
     private void takeTestPicture(Image image) {
-        File outputFile = new File(TEST_DIRECTORY + Controller.currentPerson);
+        File outputFile = new File(TEST_DIRECTORY + Controller.currentPerson + PNG_FORMAT);
         try {
             writeFile(image, PNG_FORMAT, outputFile);
             System.err.println("Snapped test picture");
@@ -35,7 +35,7 @@ public class TakePicture {
         File outputFile = new File(PERSONS_DIRECTORY +
                 Controller.currentPerson + "/" +
                 Controller.personLabelMap.get(Controller.currentPerson) +
-                "-" + Controller.currentPerson.toLowerCase() + "_" + i + ".png");
+                "-" + Controller.currentPerson.toLowerCase() + "_" + i + PNG_FORMAT);
         try {
             writeFile(image, PNG_FORMAT, outputFile);
             System.err.println("Snapped training picture");
