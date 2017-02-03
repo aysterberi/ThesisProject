@@ -10,6 +10,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+import static se.su.thesis.utils.Constants.*;
+
 public class TakePicture {
     public TakePicture(Image image, int i, ImageType type) throws IOException {
         if (type == ImageType.Training)
@@ -19,25 +21,36 @@ public class TakePicture {
     }
 
     private void takeTestPicture(Image image) {
-        // TODO: Implement
-    }
-
-    private void takePicture(Image image, int i) {
-        File outputFile = new File("src/main/resources/persons/" +
-                Controller.currentPerson + "/" +
-                Controller.personLabelMap.get(Controller.currentPerson) +
-                "-" + Controller.currentPerson.toLowerCase() + "_" + i + ".png");
-        BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
-        bImage = cropImage(bImage);
-        if (bImage == null)
-            System.err.println("Image crop failed");
-        System.err.println("Image width: " + bImage.getWidth() + " Image height: " + bImage.getHeight());
+        File outputFile = new File(TEST_DIRECTORY + Controller.currentPerson);
         try {
-            ImageIO.write(bImage, "png", outputFile);
-            System.err.println("Snapped picture");
+            writeFile(image, PNG_FORMAT, outputFile);
+            System.err.println("Snapped test picture");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+    }
+
+    private void takePicture(Image image, int i) {
+        File outputFile = new File(PERSONS_DIRECTORY +
+                Controller.currentPerson + "/" +
+                Controller.personLabelMap.get(Controller.currentPerson) +
+                "-" + Controller.currentPerson.toLowerCase() + "_" + i + ".png");
+        try {
+            writeFile(image, PNG_FORMAT, outputFile);
+            System.err.println("Snapped training picture");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void writeFile(Image image, String imageFormat, File path) throws IOException {
+        BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
+        bufferedImage = cropImage(bufferedImage);
+        if (bufferedImage != null)
+            ImageIO.write(bufferedImage, imageFormat, path);
+        else
+            System.err.println("Image crop failed");
     }
 
     private BufferedImage cropImage(BufferedImage image) {
