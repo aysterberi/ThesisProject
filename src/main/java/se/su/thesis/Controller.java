@@ -32,6 +32,7 @@ public class Controller {
     private CascadeClassifier faceCascade;
     private ScheduledExecutorService timer;
     private boolean cameraActive = false;
+    private boolean menuPopulated = false;
     private static int cameraId = 0;
     Image imageOfFace;
     Rect roi;
@@ -98,14 +99,16 @@ public class Controller {
      */
     @FXML
     public void setUpExistingPersonsMenu() {
-        borderPane.requestLayout();
-        File[] directories = getExistingPersons();
-        if (directories != null) {
-            for (File f : directories) {
-                MenuItem menuItem = new MenuItem(f.getName());
-                if (!existingPersonsMenu.getItems().contains(menuItem))
+        if (!menuPopulated) {
+            borderPane.requestLayout();
+            File[] directories = getExistingPersons();
+            if (directories != null) {
+                for (File f : directories) {
+                    MenuItem menuItem = new MenuItem(f.getName());
                     menuItem.setOnAction((event -> setCurrentPerson(f.getName())));
-                existingPersonsMenu.getItems().add(menuItem);
+                    existingPersonsMenu.getItems().add(menuItem);
+                }
+                menuPopulated = true;
             }
         }
     }
@@ -242,6 +245,8 @@ public class Controller {
 
         Optional<String> result = newPersonDialog.showAndWait();
         result.ifPresent(this::createPersonFolder);
+        existingPersonsMenu.getItems().clear();
+        menuPopulated = false;
     }
 
     private void createPersonFolder(String name) {
@@ -262,7 +267,9 @@ public class Controller {
     @FXML
     public void openTrainDialog() {
         if (!personLabelMap.isEmpty()) {
-            ChoiceDialog dialog = new ChoiceDialog(personLabelMap.keySet());
+            ChoiceDialog dialog = new ChoiceDialog();
+            for (String s : personLabelMap.keySet())
+                dialog.getItems().add(s);
             dialog.setTitle("Train");
             dialog.setHeaderText("Train the algorithm with some images");
             dialog.setContentText("Select the person you wish to train the algorithm on:");
