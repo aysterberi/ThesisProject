@@ -2,4 +2,5 @@ target/
 .idea/
 *.iml
 src/main/resources/persons/
+src/main/resources/test/*.png
 src/test/
