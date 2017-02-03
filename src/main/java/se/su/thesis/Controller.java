@@ -205,9 +205,7 @@ public class Controller {
         int pictureNumber = checkNumber(pathToPersonFolder);
         if (imageOfFace != null) {
             if (b.getId().equals("pictureButton"))
-                new TakePicture(imageOfFace, pictureNumber, ImageType.Training);
-            else
-                new TakePicture(imageOfFace, pictureNumber, ImageType.Test);
+                new TakePicture(imageOfFace, pictureNumber, b.getId().equals("pictureButton") ? ImageType.Training : ImageType.Test);
         }
     }
 
