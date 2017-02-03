@@ -1,0 +1,1 @@
+Pictures to test against will be put in this folder.
