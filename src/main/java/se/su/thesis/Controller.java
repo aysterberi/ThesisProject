@@ -28,17 +28,16 @@ import static se.su.thesis.utils.Constants.LABEL_TEXT;
 
 public class Controller {
 
-    VideoCapture capture = new VideoCapture();
+    private VideoCapture capture = new VideoCapture();
     private CascadeClassifier faceCascade;
     private ScheduledExecutorService timer;
     private boolean cameraActive = false;
     private boolean menuPopulated = false;
-    private static int cameraId = 0;
-    Image imageOfFace;
-    Rect roi;
-    static String currentPerson = "";
+    private Image imageOfFace;
+    private Rect roi;
     private Image imageToShow;
     private int faceSize;
+    static String currentPerson = "";
     static HashMap<String, Integer> personLabelMap = new HashMap<>();
 
     @FXML
@@ -65,6 +64,7 @@ public class Controller {
     @FXML
     protected void startCamera(ActionEvent event) {
         if (!this.cameraActive) {
+            int cameraId = 0;
             this.capture.open(cameraId);
             if (this.capture.isOpened()) {
                 this.cameraActive = true;
@@ -185,7 +185,7 @@ public class Controller {
                     Mat cropped = new Mat(frame, roi);
                     imageOfFace = Utils.mat2Image(cropped);
                 }
-                // Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2GRAY);
+                // Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2GRAY); //TODO: Cna we remove this?
             } catch (Exception e) {
                 System.err.println("Exception during the image elaboration:" + e);
             }
@@ -255,8 +255,6 @@ public class Controller {
             if (files.mkdirs()) {
                 System.err.println("Directory created");
                 currentPerson = name;
-                // TODO: We need to recreate/save the hashmap so that we don't need to recreate the training images
-                // TODO: the code already exists somewhat i think because we do some lookups against the directory
                 personLabelMap.put(name, personLabelMap.size());
                 personLabel.setText(LABEL_TEXT + name);
             } else
