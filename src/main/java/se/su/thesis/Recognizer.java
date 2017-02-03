@@ -49,6 +49,8 @@ public class Recognizer {
         }
 
         FaceRecognizer faceRecognizer = createFisherFaceRecognizer();
+//        FaceRecognizer faceRecognizer = createEigenFaceRecognizer();
+//        FaceRecognizer faceRecognizer = createLBPHFaceRecognizer();
 
         faceRecognizer.train(images, labels);
         int predictedLabel = faceRecognizer.predict(testImage);
