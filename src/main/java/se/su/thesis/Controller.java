@@ -192,18 +192,27 @@ public class Controller {
 
     @FXML
     public void takePicture(ActionEvent actionEvent) throws IOException {
-        if (currentPerson.equals("")) {
+        if (currentPerson.isEmpty()) {
             System.err.println("Need to select a person");
             return;
         }
 
-        Button b = (Button) actionEvent.getSource();
-
         String pathToPersonFolder = "src/main/resources/persons/" + currentPerson + "/";
         int pictureNumber = checkNumber(pathToPersonFolder);
         if (imageOfFace != null) {
-            if (b.getId().equals("pictureButton"))
-                new TakePicture(imageOfFace, pictureNumber, b.getId().equals("pictureButton") ? ImageType.Training : ImageType.Test);
+            new TakePicture(imageOfFace, pictureNumber, ImageType.Training);
+        }
+    }
+
+    @FXML
+    public void takeTestPicture(ActionEvent event) throws IOException {
+        if (currentPerson.isEmpty()) {
+            System.err.println("Need to select a person");
+            return;
+        }
+
+        if (imageOfFace != null) {
+            new TakePicture(imageOfFace, -1, ImageType.Test);
         }
     }
 
