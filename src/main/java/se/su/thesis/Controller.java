@@ -34,6 +34,7 @@ public class Controller {
     private Image imageOfFace;
     private String currentPersonPath = "src/main/resources/persons/Matt";
     private Rect roi;
+    Mat cropped;
     private Image imageToShow;
     private int faceSize;
     static String currentPerson = "";
@@ -72,10 +73,11 @@ public class Controller {
                 Runnable frameGrabber = () -> {
                     imageToShow = getImage();
                     currentFrame.setImage(imageToShow);
-//                    System.out.println(currentPersonPath);
+                    if (imageOfFace != null){
+                        new Recognizer().recognize(currentPersonPath, Utils.matToBufferedImage(cropped));
+                    }
 //                    if (currentPersonPath != null){
-//                        System.out.println(currentPersonPath);
-//                        new Recognizer().recognize(currentPersonPath, "src/main/resources/test/Matt.png");
+//
 //                    }
                 };
 
@@ -186,7 +188,7 @@ public class Controller {
                 }
                 imageToShow = Utils.mat2Image(frame);
                 if (roi != null) {
-                    Mat cropped = new Mat(frame, roi);
+                    cropped = new Mat(frame, roi);
                     imageOfFace = Utils.mat2Image(cropped);
                 }
                 // Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2GRAY); //TODO: Cna we remove this?

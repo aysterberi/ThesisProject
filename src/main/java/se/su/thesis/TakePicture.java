@@ -24,6 +24,7 @@ public class TakePicture {
         File outputFile = new File(TEST_DIRECTORY + Controller.currentPerson + "." + PNG_FORMAT);
         try {
             writeFile(image, PNG_FORMAT, outputFile);
+            System.err.println(outputFile.getAbsolutePath());
             System.err.println("Snapped test picture");
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -38,6 +39,7 @@ public class TakePicture {
                 "-" + Controller.currentPerson.toLowerCase() + "_" + i + "." + PNG_FORMAT);
         try {
             writeFile(image, PNG_FORMAT, outputFile);
+            System.err.println(outputFile.getAbsolutePath());
             System.err.println("Snapped training picture");
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -53,7 +55,7 @@ public class TakePicture {
             System.err.println("Image crop failed");
     }
 
-    private BufferedImage cropImage(BufferedImage image) {
+    public static BufferedImage cropImage(BufferedImage image) {
         try {
             return Thumbnails.of(image).size(150, 150).asBufferedImage();
         } catch (IOException e) {

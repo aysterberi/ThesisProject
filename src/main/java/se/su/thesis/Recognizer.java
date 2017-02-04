@@ -7,6 +7,7 @@ package se.su.thesis;
 
 import org.bytedeco.javacpp.opencv_core.Mat;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.nio.IntBuffer;
@@ -23,8 +24,11 @@ public class Recognizer {
     public Recognizer() {
     }
 
-    public void recognize(String pathToTrainingDirectory, String pathToTestImage) {
-        Mat testImage = imread(pathToTestImage, CV_LOAD_IMAGE_GRAYSCALE);
+    public void recognize(String pathToTrainingDirectory, BufferedImage pathToTestImage) {
+//        Mat testImage = imread(pathToTestImage., CV_LOAD_IMAGE_GRAYSCALE);
+        BufferedImage test = TakePicture.cropImage(pathToTestImage);
+        Mat testImage = new Mat(test.getHeight(),test.getWidth(), CV_LOAD_IMAGE_GRAYSCALE);
+//        pathToTestImage.
         File root = new File(pathToTrainingDirectory);
 
         FilenameFilter imageFilter = (dir, name) -> {
@@ -53,7 +57,6 @@ public class Recognizer {
         faceRecognizer.train(images, labels);
         int predictedLabel = faceRecognizer.predict(testImage);
 
-        System.err.println("Predicted label: ");
-        System.err.println(predictedLabel + "I believe this person is:" + ;
+        System.err.println("Predicted label: " + predictedLabel);
     }
 }
