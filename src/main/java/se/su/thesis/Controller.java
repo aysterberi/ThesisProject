@@ -32,9 +32,10 @@ public class Controller {
     private boolean cameraActive = false;
     private boolean menuPopulated = false;
     private Image imageOfFace;
-    private String currentPersonPath = "src/main/resources/persons/Matt";
+    private String personPath = "src/main/resources/persons/";
+    private String testPath = "src/main/resources/test/";
     private Rect roi;
-    Mat cropped;
+    private Mat cropped;
     private Image imageToShow;
     private int faceSize;
     static String currentPerson = "";
@@ -73,11 +74,11 @@ public class Controller {
                 Runnable frameGrabber = () -> {
                     imageToShow = getImage();
                     currentFrame.setImage(imageToShow);
-                    if (imageOfFace != null){
-                        new Recognizer().recognize(currentPersonPath, Utils.matToBufferedImage(cropped));
-                    }
-//                    if (currentPersonPath != null){
-//
+//                    if (roi != null){
+//                        new Recognizer().recognize(personPath, Utils.matToBufferedImage(cropped));
+//                    }
+//                    if (personPath != null){
+//                        new Recognizer().recognize(personPath, "src/main/resources/test/Brad.png");
 //                    }
                 };
 
@@ -191,7 +192,7 @@ public class Controller {
                     cropped = new Mat(frame, roi);
                     imageOfFace = Utils.mat2Image(cropped);
                 }
-                // Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2GRAY); //TODO: Cna we remove this?
+                // Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2GRAY); //TODO: Cna we remove this? Yes
             } catch (Exception e) {
                 System.err.println("Exception during the image elaboration:" + e);
             }
@@ -268,7 +269,7 @@ public class Controller {
                 currentPerson = name;
                 personLabelMap.put(name, personLabelMap.size());
                 personLabel.setText(LABEL_TEXT + name);
-                currentPersonPath = files.getPath();
+                personPath = files.getPath();
             } else
                 System.err.println("Failed to create directory");
         }
@@ -292,5 +293,19 @@ public class Controller {
 
     private void trainOnFaces(String name) {
         System.err.println("train on face: " + name);
+        Recognizer recognizer = new Recognizer();
+        recognizer.recognize(personPath + name, testPath+"Brad.png");
+        if (recognizer.getPredictedLabel() != 1){
+            System.err.println("This person is not: " + name);
+        }else {
+            System.err.println("This person is: " + name);
+        }
+        recognizer.recognize(personPath + name, testPath+"Matt1.png");
+        if (recognizer.getPredictedLabel() != 1){
+            System.err.println("This person is not: " + name);
+        }else {
+            System.err.println("This person is: " + name);
+//            currentFrame.setImage(new Image(testPath+"Matt1.png"));
+        }
     }
 }

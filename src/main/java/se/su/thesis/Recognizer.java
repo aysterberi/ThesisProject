@@ -7,7 +7,6 @@ package se.su.thesis;
 
 import org.bytedeco.javacpp.opencv_core.Mat;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.nio.IntBuffer;
@@ -20,15 +19,19 @@ import static org.bytedeco.javacpp.opencv_imgcodecs.CV_LOAD_IMAGE_GRAYSCALE;
 import static org.bytedeco.javacpp.opencv_imgcodecs.imread;
 
 public class Recognizer {
+    private int predictedLabel;
+
 
     public Recognizer() {
+
     }
 
-    public void recognize(String pathToTrainingDirectory, BufferedImage pathToTestImage) {
-//        Mat testImage = imread(pathToTestImage., CV_LOAD_IMAGE_GRAYSCALE);
-        BufferedImage test = TakePicture.cropImage(pathToTestImage);
-        Mat testImage = new Mat(test.getHeight(),test.getWidth(), CV_LOAD_IMAGE_GRAYSCALE);
-//        pathToTestImage.
+    public void recognize(String pathToTrainingDirectory, String pathToTestImage) {
+//        String fname = null;
+        Mat testImage = imread(pathToTestImage, CV_LOAD_IMAGE_GRAYSCALE);
+//    public void recognize(String pathToTrainingDirectory, BufferedImage pathToTestImage) {
+//        BufferedImage test = TakePicture.cropImage(pathToTestImage);
+//        Mat testImage = new Mat(test.getHeight(),test.getWidth(), CV_LOAD_IMAGE_GRAYSCALE);
         File root = new File(pathToTrainingDirectory);
 
         FilenameFilter imageFilter = (dir, name) -> {
@@ -46,17 +49,28 @@ public class Recognizer {
             Mat image = imread(f.getAbsolutePath(), CV_LOAD_IMAGE_GRAYSCALE);
             int label = Integer.parseInt(f.getName().split("\\-")[0]);
             images.put(counter, image);
+//            fname = f.getName();
             labelsBuffer.put(counter, label);
             counter++;
         }
 
-//        FaceRecognizer faceRecognizer = createFisherFaceRecognizer();
-        FaceRecognizer faceRecognizer = createEigenFaceRecognizer();
+//        FaceRecognizer faceRecognizer = createFisherFaceRecognizer(0,0.0);
+        FaceRecognizer faceRecognizer = createEigenFaceRecognizer(15, 5000.0);
 //        FaceRecognizer faceRecognizer = createLBPHFaceRecognizer();
-
         faceRecognizer.train(images, labels);
-        int predictedLabel = faceRecognizer.predict(testImage);
+        predictedLabel = faceRecognizer.predict(testImage);
+//        if (predictedLabel != 1){
+//            System.err.println("Predicted label: " + predictedLabel);
+//        }else{
+//            System.err.println("Predicted label: " + predictedLabel);
+//        }
+//        if (predictedLabel != 1){
+//            testImage = imread("src/main/resources/test/Matt1.png", CV_LOAD_IMAGE_GRAYSCALE);
+//            predictedLabel = faceRecognizer.predict(testImage);
+//            System.err.println(fname + predictedLabel);          //        }
+    }
 
-        System.err.println("Predicted label: " + predictedLabel);
+    public int getPredictedLabel() {
+        return predictedLabel;
     }
 }
