@@ -5,17 +5,18 @@
 
 package se.su.thesis;
 
-import static org.bytedeco.javacpp.opencv_core.*;
-import static org.bytedeco.javacpp.opencv_core.CV_32SC1;
-import static org.bytedeco.javacpp.opencv_face.*;
-import static org.bytedeco.javacpp.opencv_face.createFisherFaceRecognizer;
-import static org.bytedeco.javacpp.opencv_imgcodecs.*;
-
 import org.bytedeco.javacpp.opencv_core.Mat;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.nio.IntBuffer;
+
+import static org.bytedeco.javacpp.opencv_core.CV_32SC1;
+import static org.bytedeco.javacpp.opencv_core.MatVector;
+import static org.bytedeco.javacpp.opencv_face.FaceRecognizer;
+import static org.bytedeco.javacpp.opencv_face.createEigenFaceRecognizer;
+import static org.bytedeco.javacpp.opencv_imgcodecs.CV_LOAD_IMAGE_GRAYSCALE;
+import static org.bytedeco.javacpp.opencv_imgcodecs.imread;
 
 public class Recognizer {
 
@@ -26,12 +27,9 @@ public class Recognizer {
         Mat testImage = imread(pathToTestImage, CV_LOAD_IMAGE_GRAYSCALE);
         File root = new File(pathToTrainingDirectory);
 
-        FilenameFilter imageFilter = new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                name = name.toLowerCase();
-                return name.endsWith(".jpg") || name.endsWith(".pgm") || name.endsWith(".png");
-            }
+        FilenameFilter imageFilter = (dir, name) -> {
+            name = name.toLowerCase();
+            return name.endsWith(".jpg") || name.endsWith(".pgm") || name.endsWith(".png");
         };
 
         File[] imageFiles = root.listFiles(imageFilter);
@@ -48,12 +46,14 @@ public class Recognizer {
             counter++;
         }
 
-        FaceRecognizer faceRecognizer = createFisherFaceRecognizer();
-//        FaceRecognizer faceRecognizer = createEigenFaceRecognizer();
+//        FaceRecognizer faceRecognizer = createFisherFaceRecognizer();
+        FaceRecognizer faceRecognizer = createEigenFaceRecognizer();
 //        FaceRecognizer faceRecognizer = createLBPHFaceRecognizer();
 
         faceRecognizer.train(images, labels);
         int predictedLabel = faceRecognizer.predict(testImage);
-        System.err.println("Predicted label: " + predictedLabel);
+
+        System.err.println("Predicted label: ");
+        System.err.println(predictedLabel + "I believe this person is:" + ;
     }
 }
