@@ -16,9 +16,7 @@ import se.su.thesis.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -34,6 +32,7 @@ public class Controller {
     private boolean cameraActive = false;
     private boolean menuPopulated = false;
     private Image imageOfFace;
+    private String currentPersonPath = "src/main/resources/persons/Matt";
     private Rect roi;
     private Image imageToShow;
     private int faceSize;
@@ -73,6 +72,11 @@ public class Controller {
                 Runnable frameGrabber = () -> {
                     imageToShow = getImage();
                     currentFrame.setImage(imageToShow);
+//                    System.out.println(currentPersonPath);
+//                    if (currentPersonPath != null){
+//                        System.out.println(currentPersonPath);
+//                        new Recognizer().recognize(currentPersonPath, "src/main/resources/test/Matt.png");
+//                    }
                 };
 
                 this.timer = Executors.newSingleThreadScheduledExecutor();
@@ -202,6 +206,11 @@ public class Controller {
 
         String pathToPersonFolder = "src/main/resources/persons/" + currentPerson + "/";
         int pictureNumber = checkNumber(pathToPersonFolder);
+        /*
+        Todo: fix ^ pictureNumber to work as intended.
+         */
+
+        pictureNumber++;
         if (imageOfFace != null) {
             new TakePicture(imageOfFace, pictureNumber, ImageType.Training);
         }
@@ -257,6 +266,7 @@ public class Controller {
                 currentPerson = name;
                 personLabelMap.put(name, personLabelMap.size());
                 personLabel.setText(LABEL_TEXT + name);
+                currentPersonPath = files.getPath();
             } else
                 System.err.println("Failed to create directory");
         }
