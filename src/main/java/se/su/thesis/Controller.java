@@ -11,6 +11,7 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.objdetect.Objdetect;
 import org.opencv.videoio.VideoCapture;
+import se.su.thesis.utils.Constants;
 import se.su.thesis.utils.ImageType;
 import se.su.thesis.utils.Utils;
 
@@ -32,8 +33,6 @@ public class Controller {
     private boolean cameraActive = false;
     private boolean menuPopulated = false;
     private Image imageOfFace;
-    private String personPath = "src/main/resources/persons/";
-    private String testPath = "src/main/resources/test/";
     private Rect roi;
     private Mat cropped;
     private Image imageToShow;
@@ -129,7 +128,7 @@ public class Controller {
      * @return an array of directories in the persons folder
      */
     private File[] getExistingPersons() {
-        return new File("src/main/resources/persons/").listFiles(File::isDirectory);
+        return new File(Constants.PERSONS_DIRECTORY).listFiles(File::isDirectory);
     }
 
     private void stopAcquisition() {
@@ -269,7 +268,6 @@ public class Controller {
                 currentPerson = name;
                 personLabelMap.put(name, personLabelMap.size());
                 personLabel.setText(LABEL_TEXT + name);
-                personPath = files.getPath();
             } else
                 System.err.println("Failed to create directory");
         }
@@ -294,18 +292,23 @@ public class Controller {
     private void trainOnFaces(String name) {
         System.err.println("train on face: " + name);
         Recognizer recognizer = new Recognizer();
-        recognizer.recognize(personPath + name, testPath+"Brad.png");
-        if (recognizer.getPredictedLabel() != 1){
-            System.err.println("This person is not: " + name);
-        }else {
-            System.err.println("This person is: " + name);
+        for (int i = 0; i < 3; i++){
+            if (i == 0){
+                recognizer.recognize(Constants.PERSONS_DIRECTORY + name, Constants.TEST_DIRECTORY+"Brad.png");
+            }else if (i == 1){
+                recognizer.recognize(Constants.PERSONS_DIRECTORY + name, Constants.TEST_DIRECTORY+"Matt.png");
+            }else {
+                recognizer.recognize(Constants.PERSONS_DIRECTORY + name, Constants.TEST_DIRECTORY+"Jea.png");
+            }
+            if (recognizer.getPredictedLabel() == 1){
+                name = "Jea";
+                System.err.println("This person is : " + name);
+            }else if (recognizer.getPredictedLabel() == 4){
+                System.err.println("This person is: " + name);
+            }else{
+                System.err.println("This person is: " + "unkown");
+            }
         }
-        recognizer.recognize(personPath + name, testPath+"Matt1.png");
-        if (recognizer.getPredictedLabel() != 1){
-            System.err.println("This person is not: " + name);
-        }else {
-            System.err.println("This person is: " + name);
-//            currentFrame.setImage(new Image(testPath+"Matt1.png"));
-        }
+
     }
 }
