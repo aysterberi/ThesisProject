@@ -34,7 +34,6 @@ public class Recognizer {
 //        BufferedImage test = TakePicture.cropImage(pathToTestImage);
 //        Mat testImage = new Mat(test.getHeight(),test.getWidth(), CV_LOAD_IMAGE_GRAYSCALE);
 
-
     public void recognize(String pathToTestImage) {
         personsMap = new HashMap<>();
         File[] directories = Controller.getExistingPersons();

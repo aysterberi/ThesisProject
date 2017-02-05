@@ -278,8 +278,9 @@ public class Controller {
     public void openTrainDialog() {
         if (!testPersonMap.isEmpty()) {
             ChoiceDialog dialog = new ChoiceDialog();
-            for (String s : testPersonMap.keySet())
+            for (String s : testPersonMap.keySet()){
                 dialog.getItems().add(s);
+            }
             dialog.setTitle("Facerecognition");
             dialog.setHeaderText("Try facerecognition on one of the training pictures");
             dialog.setContentText("Select the person you wish to try facerecognition on:");

@@ -67,7 +67,7 @@
                 </Menu>
             <Menu mnemonicParsing="false" text="Train">
                <items>
-                  <MenuItem fx:id="trainMenuButton" mnemonicParsing="false" onAction="#openTrainDialog" text="Train..." />
+                  <MenuItem fx:id="trainMenuButton" mnemonicParsing="false" onAction="#openTrainDialog" text="Facerecognition..." />
                </items></Menu>
             </menus>
             <BorderPane.margin>
