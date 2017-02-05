@@ -35,7 +35,7 @@ public class Recognizer {
 //        Mat testImage = new Mat(test.getHeight(),test.getWidth(), CV_LOAD_IMAGE_GRAYSCALE);
 
 
-    public void recognize(String pathToTrainingDirectory, String pathToTestImage) {
+    public void recognize(String pathToTestImage) {
         personsMap = new HashMap<>();
         File[] directories = Controller.getExistingPersons();
         Mat testImage = imread(pathToTestImage, CV_LOAD_IMAGE_GRAYSCALE);

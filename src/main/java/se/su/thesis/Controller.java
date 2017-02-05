@@ -293,7 +293,7 @@ public class Controller {
     private void trainOnFaces(String name) {
         System.err.println("Recognizing Face of: " + name);
         Recognizer recognizer = new Recognizer();
-        recognizer.recognize(Constants.PERSONS_DIRECTORY, Constants.TEST_DIRECTORY+name);
+        recognizer.recognize(Constants.TEST_DIRECTORY+name);
 
         System.err.println("predicted label: " + recognizer.getPredictedLabel());
         System.err.println("The predicted person is: " + recognizer.getNameOfPredictedPerson());
