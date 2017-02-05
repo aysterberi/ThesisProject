@@ -60,7 +60,7 @@ public class Recognizer {
                 images.put(counter, image);
                 labelsBuffer.put(counter, label);
                 counter++;
-                personsMap.put(label, f.getName());
+                personsMap.put(label, dirs.getName());
             }
 
         }
@@ -75,11 +75,9 @@ public class Recognizer {
 
     public String getNameOfPredictedPerson(){
         if (predictedLabel == 0){
-            return "unknown";
+            return "Unknown";
         }
-        String personName = personsMap.get(predictedLabel);
-        String[] personNameSplit = personName.split("\\-");
-        return personNameSplit[1].substring(0,personNameSplit[1].length() - 6);
+        return personsMap.get(predictedLabel);
     }
 
     public int calculateFileLenght (File[] directories, FilenameFilter imageFilter) {
