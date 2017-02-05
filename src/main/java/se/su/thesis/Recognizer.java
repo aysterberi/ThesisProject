@@ -10,6 +10,7 @@ import org.bytedeco.javacpp.opencv_core.Mat;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.nio.IntBuffer;
+import java.util.HashMap;
 
 import static org.bytedeco.javacpp.opencv_core.CV_32SC1;
 import static org.bytedeco.javacpp.opencv_core.MatVector;
@@ -20,6 +21,8 @@ import static org.bytedeco.javacpp.opencv_imgcodecs.imread;
 
 public class Recognizer {
     private int predictedLabel;
+    private HashMap<Integer, String> personsMap;
+
 
 
     public Recognizer() {
@@ -33,6 +36,7 @@ public class Recognizer {
 
 
     public void recognize(String pathToTrainingDirectory, String pathToTestImage) {
+        personsMap = new HashMap<>();
         File[] directories = Controller.getExistingPersons();
         Mat testImage = imread(pathToTestImage, CV_LOAD_IMAGE_GRAYSCALE);
         FilenameFilter imageFilter = (dir, name) -> {
@@ -56,17 +60,26 @@ public class Recognizer {
                 images.put(counter, image);
                 labelsBuffer.put(counter, label);
                 counter++;
+                personsMap.put(label, f.getName());
             }
 
         }
-            FaceRecognizer faceRecognizer = createEigenFaceRecognizer();
+            FaceRecognizer faceRecognizer = createEigenFaceRecognizer(10,500.0);
             faceRecognizer.train(images, labels);
             predictedLabel = faceRecognizer.predict(testImage);
-            System.out.println(predictedLabel);
     }
 
     public int getPredictedLabel() {
         return predictedLabel;
+    }
+
+    public String getNameOfPredictedPerson(){
+        if (predictedLabel == 0){
+            return "unknown";
+        }
+        String personName = personsMap.get(predictedLabel);
+        String[] personNameSplit = personName.split("\\_");
+        return personNameSplit[0].substring(2);
     }
 
     public int calculateFileLenght (File[] directories, FilenameFilter imageFilter) {
