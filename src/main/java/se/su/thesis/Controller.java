@@ -39,6 +39,7 @@ public class Controller {
     private int faceSize;
     static String currentPerson = "";
     static HashMap<String, Integer> personLabelMap = new HashMap<>();
+    static HashMap<String, Integer> testPersonMap = new HashMap<>();
 
     @FXML
     private Button startCameraButton;
@@ -77,7 +78,7 @@ public class Controller {
 //                        new Recognizer().recognize(personPath, Utils.matToBufferedImage(cropped));
 //                    }
 //                    if (personPath != null){
-//                        new Recognizer().recognize(personPath, "src/main/resources/test/Brad.png");
+//                        new Recognizer().recognize(personPath, "src/main/resources/test/0-unkown_4.png");
 //                    }
                 };
 
@@ -127,7 +128,7 @@ public class Controller {
     /**
      * @return an array of directories in the persons folder
      */
-    private File[] getExistingPersons() {
+    public static File[] getExistingPersons() {
         return new File(Constants.PERSONS_DIRECTORY).listFiles(File::isDirectory);
     }
 
@@ -275,13 +276,13 @@ public class Controller {
 
     @FXML
     public void openTrainDialog() {
-        if (!personLabelMap.isEmpty()) {
+        if (!testPersonMap.isEmpty()) {
             ChoiceDialog dialog = new ChoiceDialog();
-            for (String s : personLabelMap.keySet())
+            for (String s : testPersonMap.keySet())
                 dialog.getItems().add(s);
-            dialog.setTitle("Train");
-            dialog.setHeaderText("Train the algorithm with some images");
-            dialog.setContentText("Select the person you wish to train the algorithm on:");
+            dialog.setTitle("Facerecognition");
+            dialog.setHeaderText("Try facerecognition on one of the training pictures");
+            dialog.setContentText("Select the person you wish to try facerecognition on:");
 
             Optional<String> result = dialog.showAndWait();
             result.ifPresent(this::trainOnFaces);
@@ -290,25 +291,11 @@ public class Controller {
     }
 
     private void trainOnFaces(String name) {
-        System.err.println("train on face: " + name);
+        System.err.println("Recognizing Face of: " + name);
         Recognizer recognizer = new Recognizer();
-        for (int i = 0; i < 3; i++){
-            if (i == 0){
-                recognizer.recognize(Constants.PERSONS_DIRECTORY + name, Constants.TEST_DIRECTORY+"Brad.png");
-            }else if (i == 1){
-                recognizer.recognize(Constants.PERSONS_DIRECTORY + name, Constants.TEST_DIRECTORY+"Matt.png");
-            }else {
-                recognizer.recognize(Constants.PERSONS_DIRECTORY + name, Constants.TEST_DIRECTORY+"Jea.png");
-            }
-            if (recognizer.getPredictedLabel() == 1){
-                name = "Jea";
-                System.err.println("This person is : " + name);
-            }else if (recognizer.getPredictedLabel() == 4){
-                System.err.println("This person is: " + name);
-            }else{
-                System.err.println("This person is: " + "unkown");
-            }
-        }
+        recognizer.recognize(Constants.PERSONS_DIRECTORY, Constants.TEST_DIRECTORY+name);
 
+        System.err.println("predicted label: " + recognizer.getPredictedLabel());
+        System.err.println("The predicted person is: " + recognizer.getNameOfPredictedPerson());
     }
 }
