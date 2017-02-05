@@ -26,51 +26,56 @@ public class Recognizer {
 
     }
 
-    public void recognize(String pathToTrainingDirectory, String pathToTestImage) {
-//        String fname = null;
-        Mat testImage = imread(pathToTestImage, CV_LOAD_IMAGE_GRAYSCALE);
+// This is code for liveStream recognition
 //    public void recognize(String pathToTrainingDirectory, BufferedImage pathToTestImage) {
 //        BufferedImage test = TakePicture.cropImage(pathToTestImage);
 //        Mat testImage = new Mat(test.getHeight(),test.getWidth(), CV_LOAD_IMAGE_GRAYSCALE);
-        File root = new File(pathToTrainingDirectory);
 
+
+    public void recognize(String pathToTrainingDirectory, String pathToTestImage) {
+        File[] directories = Controller.getExistingPersons();
+        Mat testImage = imread(pathToTestImage, CV_LOAD_IMAGE_GRAYSCALE);
         FilenameFilter imageFilter = (dir, name) -> {
             name = name.toLowerCase();
             return name.endsWith(".jpg") || name.endsWith(".pgm") || name.endsWith(".png");
         };
-
-        File[] imageFiles = root.listFiles(imageFilter);
-        MatVector images = new MatVector(imageFiles.length);
-        Mat labels = new Mat(imageFiles.length, 1, CV_32SC1);
-        IntBuffer labelsBuffer = labels.createBuffer();
+        int result = calculateFileLenght(directories, imageFilter);
+        MatVector images = new MatVector(result);
+        Mat labels = new Mat(result, 1, CV_32SC1);
         int counter = 0;
+        for (File dirs : directories) {
+            System.out.println("Going through " + dirs.getName() + " folder");
+            File root = new File(dirs.getAbsolutePath());
+//            File root = new File(pathToTrainingDirectory);
+            File[] imageFiles = root.listFiles(imageFilter);
+            IntBuffer labelsBuffer = labels.createBuffer();
 
-        for (File f : imageFiles) {
-            Mat image = imread(f.getAbsolutePath(), CV_LOAD_IMAGE_GRAYSCALE);
-            int label = Integer.parseInt(f.getName().split("\\-")[0]);
-            images.put(counter, image);
-//            fname = f.getName();
-            labelsBuffer.put(counter, label);
-            counter++;
+            for (File f : imageFiles) {
+                Mat image = imread(f.getAbsolutePath(), CV_LOAD_IMAGE_GRAYSCALE);
+                int label = Integer.parseInt(f.getName().split("\\-")[0]);
+                images.put(counter, image);
+                labelsBuffer.put(counter, label);
+                counter++;
+            }
+
         }
-
-//        FaceRecognizer faceRecognizer = createFisherFaceRecognizer(0,0.0);
-        FaceRecognizer faceRecognizer = createEigenFaceRecognizer(15, 5000.0);
-//        FaceRecognizer faceRecognizer = createLBPHFaceRecognizer();
-        faceRecognizer.train(images, labels);
-        predictedLabel = faceRecognizer.predict(testImage);
-//        if (predictedLabel != 1){
-//            System.err.println("Predicted label: " + predictedLabel);
-//        }else{
-//            System.err.println("Predicted label: " + predictedLabel);
-//        }
-//        if (predictedLabel != 1){
-//            testImage = imread("src/main/resources/test/Matt1.png", CV_LOAD_IMAGE_GRAYSCALE);
-//            predictedLabel = faceRecognizer.predict(testImage);
-//            System.err.println(fname + predictedLabel);          //        }
+            FaceRecognizer faceRecognizer = createEigenFaceRecognizer();
+            faceRecognizer.train(images, labels);
+            predictedLabel = faceRecognizer.predict(testImage);
+            System.out.println(predictedLabel);
     }
 
     public int getPredictedLabel() {
         return predictedLabel;
+    }
+
+    public int calculateFileLenght (File[] directories, FilenameFilter imageFilter) {
+        int size = 0;
+        for (File dirs : directories) {
+            File root = new File(dirs.getAbsolutePath());
+            File[] imageFiles = root.listFiles(imageFilter);
+            size += imageFiles.length;
+        }
+        return size;
     }
 }
