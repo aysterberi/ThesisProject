@@ -35,9 +35,9 @@ public class Recognizer {
 //        Mat testImage = new Mat(test.getHeight(),test.getWidth(), CV_LOAD_IMAGE_GRAYSCALE);
 
     public void recognize(String pathToTestImage) {
+        Mat testImage = imread(pathToTestImage, CV_LOAD_IMAGE_GRAYSCALE);
         personsMap = new HashMap<>();
         File[] directories = Controller.getExistingPersons();
-        Mat testImage = imread(pathToTestImage, CV_LOAD_IMAGE_GRAYSCALE);
         FilenameFilter imageFilter = (dir, name) -> {
             name = name.toLowerCase();
             return name.endsWith(".jpg") || name.endsWith(".pgm") || name.endsWith(".png");
@@ -46,6 +46,7 @@ public class Recognizer {
         MatVector images = new MatVector(result);
         Mat labels = new Mat(result, 1, CV_32SC1);
         int counter = 0;
+
         for (File dirs : directories) {
             System.out.println("Going through " + dirs.getName() + " folder");
             File root = new File(dirs.getAbsolutePath());

@@ -24,6 +24,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import static se.su.thesis.utils.Constants.LABEL_TEXT;
+import static se.su.thesis.utils.Constants.PERSONS_DIRECTORY;
+import static se.su.thesis.utils.Constants.TEST_DIRECTORY;
 
 public class Controller {
 
@@ -74,11 +76,9 @@ public class Controller {
                 Runnable frameGrabber = () -> {
                     imageToShow = getImage();
                     currentFrame.setImage(imageToShow);
+//                    This code is for liveStream
 //                    if (roi != null){
 //                        new Recognizer().recognize(personPath, Utils.matToBufferedImage(cropped));
-//                    }
-//                    if (personPath != null){
-//                        new Recognizer().recognize(personPath, "src/main/resources/test/0-unkown_4.png");
 //                    }
                 };
 
@@ -207,7 +207,7 @@ public class Controller {
             return;
         }
 
-        String pathToPersonFolder = "src/main/resources/persons/" + currentPerson + "/";
+        String pathToPersonFolder = PERSONS_DIRECTORY + currentPerson + "/";
         int pictureNumber = checkNumber(pathToPersonFolder);
         /*
         Todo: fix ^ pictureNumber to work as intended.
@@ -262,7 +262,7 @@ public class Controller {
     }
 
     private void createPersonFolder(String name) {
-        File files = new File("src/main/resources/persons/" + name + "/");
+        File files = new File(PERSONS_DIRECTORY + name + "/");
         if (!files.exists()) {
             if (files.mkdirs()) {
                 System.err.println("Directory created");
@@ -275,7 +275,7 @@ public class Controller {
     }
 
     @FXML
-    public void openTrainDialog() {
+    public void openFacerecognitionDialog() {
         if (!testPersonMap.isEmpty()) {
             ChoiceDialog dialog = new ChoiceDialog();
             for (String s : testPersonMap.keySet()){
@@ -284,7 +284,6 @@ public class Controller {
             dialog.setTitle("Facerecognition");
             dialog.setHeaderText("Try facerecognition on one of the training pictures");
             dialog.setContentText("Select the person you wish to try facerecognition on:");
-
             Optional<String> result = dialog.showAndWait();
             result.ifPresent(this::trainOnFaces);
         } else
@@ -294,7 +293,7 @@ public class Controller {
     private void trainOnFaces(String name) {
         System.err.println("Recognizing Face of: " + name);
         Recognizer recognizer = new Recognizer();
-        recognizer.recognize(Constants.TEST_DIRECTORY+name);
+        recognizer.recognize(TEST_DIRECTORY +name);
 
         System.err.println("predicted label: " + recognizer.getPredictedLabel());
         System.err.println("The predicted person is: " + recognizer.getNameOfPredictedPerson());
