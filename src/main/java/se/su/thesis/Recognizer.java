@@ -78,8 +78,8 @@ public class Recognizer {
             return "unknown";
         }
         String personName = personsMap.get(predictedLabel);
-        String[] personNameSplit = personName.split("\\_");
-        return personNameSplit[0].substring(2);
+        String[] personNameSplit = personName.split("\\-");
+        return personNameSplit[1].substring(0,personNameSplit[1].length() - 6);
     }
 
     public int calculateFileLenght (File[] directories, FilenameFilter imageFilter) {
