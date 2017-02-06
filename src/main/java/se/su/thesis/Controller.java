@@ -36,7 +36,6 @@ public class Controller {
     private boolean menuPopulated = false;
     private Image imageOfFace;
     private Rect roi;
-    private Mat cropped;
     private Image imageToShow;
     private int faceSize;
     static String currentPerson = "";
@@ -184,15 +183,14 @@ public class Controller {
             try {
                 this.capture.read(frame);
 
-                if (!frame.empty()) {
+                if (!frame.empty())
                     faceDetect(frame);
-                }
+
                 imageToShow = Utils.mat2Image(frame);
                 if (roi != null) {
-                    cropped = new Mat(frame, roi);
+                    Mat cropped = new Mat(frame, roi);
                     imageOfFace = Utils.mat2Image(cropped);
                 }
-                // Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2GRAY); //TODO: Cna we remove this? Yes
             } catch (Exception e) {
                 System.err.println("Exception during the image elaboration:" + e);
             }
@@ -209,9 +207,7 @@ public class Controller {
 
         String pathToPersonFolder = PERSONS_DIRECTORY + currentPerson + "/";
         int pictureNumber = checkNumber(pathToPersonFolder);
-        /*
-        Todo: fix ^ pictureNumber to work as intended.
-         */
+        // TODO: fix ^ pictureNumber to work as intended.
 
         pictureNumber++;
         if (imageOfFace != null) {
@@ -278,7 +274,7 @@ public class Controller {
     public void openFacerecognitionDialog() {
         if (!testPersonMap.isEmpty()) {
             ChoiceDialog dialog = new ChoiceDialog();
-            for (String s : testPersonMap.keySet()){
+            for (String s : testPersonMap.keySet()) {
                 dialog.getItems().add(s);
             }
             dialog.setTitle("Facerecognition");
@@ -293,7 +289,7 @@ public class Controller {
     private void trainOnFaces(String name) {
         System.err.println("Recognizing Face of: " + name);
         Recognizer recognizer = new Recognizer();
-        recognizer.recognize(TEST_DIRECTORY +name);
+        recognizer.recognize(TEST_DIRECTORY + name);
 
         System.err.println("predicted label: " + recognizer.getPredictedLabel());
         System.err.println("The predicted person is: " + recognizer.getNameOfPredictedPerson());
