@@ -275,7 +275,8 @@ public class Controller {
         if (!testPersonMap.isEmpty()) {
             ChoiceDialog dialog = new ChoiceDialog();
             for (String s : testPersonMap.keySet()) {
-                dialog.getItems().add(s);
+                if (s.endsWith(".png"))
+                    dialog.getItems().add(s);
             }
             dialog.setTitle("Face Recognition");
             dialog.setHeaderText("Try to recognize someone from the training sets");
