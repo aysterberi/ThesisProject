@@ -42,7 +42,7 @@ public class Recognizer {
             name = name.toLowerCase();
             return name.endsWith(".jpg") || name.endsWith(".pgm") || name.endsWith(".png");
         };
-        int result = calculateFileLenght(directories, imageFilter);
+        int result = calculateFileLength(directories, imageFilter);
         MatVector images = new MatVector(result);
         Mat labels = new Mat(result, 1, CV_32SC1);
         int counter = 0;
@@ -80,7 +80,7 @@ public class Recognizer {
         return personsMap.get(predictedLabel);
     }
 
-    public int calculateFileLenght (File[] directories, FilenameFilter imageFilter) {
+    public int calculateFileLength(File[] directories, FilenameFilter imageFilter) {
         int size = 0;
         for (File dirs : directories) {
             File root = new File(dirs.getAbsolutePath());
