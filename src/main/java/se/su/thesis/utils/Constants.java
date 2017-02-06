@@ -5,5 +5,5 @@ public class Constants {
     public static final String PERSONS_DIRECTORY = "src/main/resources/persons/";
     public static final String TEST_DIRECTORY = "src/main/resources/test/";
     public static final String PNG_FORMAT = "png";
-    public static final double RECOGNIZER_THRESHOLD = 1600.0;
+    public static final double RECOGNIZER_THRESHOLD = 3000.0;
 }
