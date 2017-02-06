@@ -19,7 +19,7 @@ public class Utils {
         }
     }
 
-    private static BufferedImage matToBufferedImage(Mat original) {
+    public static BufferedImage matToBufferedImage(Mat original) {
         BufferedImage image;
         int width = original.width(), height = original.height(), channels = original.channels();
         byte[] sourcePixels = new byte[width * height * channels];

@@ -11,20 +11,21 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.objdetect.Objdetect;
 import org.opencv.videoio.VideoCapture;
+import se.su.thesis.utils.Constants;
 import se.su.thesis.utils.ImageType;
 import se.su.thesis.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import static se.su.thesis.utils.Constants.LABEL_TEXT;
+import static se.su.thesis.utils.Constants.PERSONS_DIRECTORY;
+import static se.su.thesis.utils.Constants.TEST_DIRECTORY;
 
 public class Controller {
 
@@ -39,6 +40,7 @@ public class Controller {
     private int faceSize;
     static String currentPerson = "";
     static HashMap<String, Integer> personLabelMap = new HashMap<>();
+    static HashMap<String, Integer> testPersonMap = new HashMap<>();
 
     @FXML
     private Button startCameraButton;
@@ -73,6 +75,10 @@ public class Controller {
                 Runnable frameGrabber = () -> {
                     imageToShow = getImage();
                     currentFrame.setImage(imageToShow);
+//                    This code is for liveStream
+//                    if (roi != null){
+//                        new Recognizer().recognize(personPath, Utils.matToBufferedImage(cropped));
+//                    }
                 };
 
                 this.timer = Executors.newSingleThreadScheduledExecutor();
@@ -121,8 +127,8 @@ public class Controller {
     /**
      * @return an array of directories in the persons folder
      */
-    private File[] getExistingPersons() {
-        return new File("src/main/resources/persons/").listFiles(File::isDirectory);
+    public static File[] getExistingPersons() {
+        return new File(Constants.PERSONS_DIRECTORY).listFiles(File::isDirectory);
     }
 
     private void stopAcquisition() {
@@ -177,15 +183,14 @@ public class Controller {
             try {
                 this.capture.read(frame);
 
-                if (!frame.empty()) {
+                if (!frame.empty())
                     faceDetect(frame);
-                }
+
                 imageToShow = Utils.mat2Image(frame);
                 if (roi != null) {
                     Mat cropped = new Mat(frame, roi);
                     imageOfFace = Utils.mat2Image(cropped);
                 }
-                // Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2GRAY); //TODO: Cna we remove this?
             } catch (Exception e) {
                 System.err.println("Exception during the image elaboration:" + e);
             }
@@ -200,8 +205,11 @@ public class Controller {
             return;
         }
 
-        String pathToPersonFolder = "src/main/resources/persons/" + currentPerson + "/";
+        String pathToPersonFolder = PERSONS_DIRECTORY + currentPerson + "/";
         int pictureNumber = checkNumber(pathToPersonFolder);
+        // TODO: fix ^ pictureNumber to work as intended.
+
+        pictureNumber++;
         if (imageOfFace != null) {
             new TakePicture(imageOfFace, pictureNumber, ImageType.Training);
         }
@@ -250,12 +258,12 @@ public class Controller {
     }
 
     private void createPersonFolder(String name) {
-        File files = new File("src/main/resources/persons/" + name + "/");
+        File files = new File(PERSONS_DIRECTORY + name + "/");
         if (!files.exists()) {
             if (files.mkdirs()) {
                 System.err.println("Directory created");
                 currentPerson = name;
-                personLabelMap.put(name, personLabelMap.size());
+                personLabelMap.put(name, personLabelMap.size() + 1);
                 personLabel.setText(LABEL_TEXT + name);
             } else
                 System.err.println("Failed to create directory");
@@ -263,15 +271,15 @@ public class Controller {
     }
 
     @FXML
-    public void openTrainDialog() {
-        if (!personLabelMap.isEmpty()) {
+    public void openFaceRecognitionDialog() {
+        if (!testPersonMap.isEmpty()) {
             ChoiceDialog dialog = new ChoiceDialog();
-            for (String s : personLabelMap.keySet())
+            for (String s : testPersonMap.keySet()) {
                 dialog.getItems().add(s);
-            dialog.setTitle("Train");
-            dialog.setHeaderText("Train the algorithm with some images");
-            dialog.setContentText("Select the person you wish to train the algorithm on:");
-
+            }
+            dialog.setTitle("Facerecognition");
+            dialog.setHeaderText("Try facerecognition on one of the training pictures");
+            dialog.setContentText("Select the person you wish to try facerecognition on:");
             Optional<String> result = dialog.showAndWait();
             result.ifPresent(this::trainOnFaces);
         } else
@@ -279,6 +287,11 @@ public class Controller {
     }
 
     private void trainOnFaces(String name) {
-        System.err.println("train on face: " + name);
+        System.err.println("Recognizing Face of: " + name);
+        Recognizer recognizer = new Recognizer();
+        recognizer.recognize(TEST_DIRECTORY + name);
+
+        System.err.println("predicted label: " + recognizer.getPredictedLabel());
+        System.err.println("The predicted person is: " + recognizer.getNameOfPredictedPerson());
     }
 }
