@@ -277,9 +277,9 @@ public class Controller {
             for (String s : testPersonMap.keySet()) {
                 dialog.getItems().add(s);
             }
-            dialog.setTitle("Facerecognition");
-            dialog.setHeaderText("Try facerecognition on one of the training pictures");
-            dialog.setContentText("Select the person you wish to try facerecognition on:");
+            dialog.setTitle("Face Recognition");
+            dialog.setHeaderText("Try to recognize someone from the training sets");
+            dialog.setContentText("Select the test image to use:");
             Optional<String> result = dialog.showAndWait();
             result.ifPresent(this::trainOnFaces);
         } else
