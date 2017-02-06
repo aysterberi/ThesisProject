@@ -271,7 +271,7 @@ public class Controller {
     }
 
     @FXML
-    public void openFacerecognitionDialog() {
+    public void openFaceRecognitionDialog() {
         if (!testPersonMap.isEmpty()) {
             ChoiceDialog dialog = new ChoiceDialog();
             for (String s : testPersonMap.keySet()) {
