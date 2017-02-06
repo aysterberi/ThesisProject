@@ -18,6 +18,7 @@ import static org.bytedeco.javacpp.opencv_face.FaceRecognizer;
 import static org.bytedeco.javacpp.opencv_face.createEigenFaceRecognizer;
 import static org.bytedeco.javacpp.opencv_imgcodecs.CV_LOAD_IMAGE_GRAYSCALE;
 import static org.bytedeco.javacpp.opencv_imgcodecs.imread;
+import static se.su.thesis.utils.Constants.RECOGNIZER_THRESHOLD;
 
 public class Recognizer {
     private int predictedLabel;
@@ -64,7 +65,7 @@ public class Recognizer {
             }
 
         }
-            FaceRecognizer faceRecognizer = createEigenFaceRecognizer(10,500.0);
+            FaceRecognizer faceRecognizer = createEigenFaceRecognizer(10, RECOGNIZER_THRESHOLD);
             faceRecognizer.train(images, labels);
             predictedLabel = faceRecognizer.predict(testImage);
     }
