@@ -230,7 +230,7 @@ public class Controller {
     private int checkNumber(String path) {
         File[] files = new File(path).listFiles();
         if (files != null)
-            return files.length;
+            return files.length - 1;
         return 0;
     }
 
