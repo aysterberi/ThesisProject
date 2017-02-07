@@ -17,6 +17,8 @@ import se.su.thesis.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.concurrent.Executors;
@@ -229,8 +231,30 @@ public class Controller {
 
     private int checkNumber(String path) {
         File[] files = new File(path).listFiles();
-        if (files != null)
+        int[] labels = new int[personLabelMap.values().size()];
+        int index = 0;
+
+        // Integer -> int
+        for (Integer i : personLabelMap.values())
+            labels[index++] = i;
+        Arrays.sort(labels);
+
+        if (files != null) {
+            for (int i = 1; i <= labels.length; i++) {
+                if (i <= personLabelMap.size()) {
+                    if (personLabelMap.values().contains(i)) {
+                        break;
+                    } else {
+                        return i;
+                    }
+                }
+            }
             return files.length - 1;
+        }
+        return 0;
+    }
+
+    private int calculateLabel() {
         return 0;
     }
 
