@@ -287,7 +287,7 @@ public class Controller {
             if (files.mkdirs()) {
                 System.err.println("Directory created");
                 currentPerson = name;
-                personLabelMap.put(name, personLabelMap.size() + 1);
+                personLabelMap.put(name, checkNumber(files.getPath()));
                 personLabel.setText(LABEL_TEXT + name);
             } else
                 System.err.println("Failed to create directory");
