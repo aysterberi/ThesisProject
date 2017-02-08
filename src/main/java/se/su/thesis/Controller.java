@@ -254,10 +254,6 @@ public class Controller {
         return 0;
     }
 
-    private int calculateLabel() {
-        return 0;
-    }
-
     /**
      * Called when clicking close in the menu bar
      */
