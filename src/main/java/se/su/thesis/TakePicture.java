@@ -57,7 +57,7 @@ public class TakePicture {
 
     public static BufferedImage cropImage(BufferedImage image) {
         try {
-            return Thumbnails.of(image).size(150, 150).asBufferedImage();
+            return Thumbnails.of(image).size(IMAGE_SIZE, IMAGE_SIZE).asBufferedImage();
         } catch (IOException e) {
             e.printStackTrace();
         }
