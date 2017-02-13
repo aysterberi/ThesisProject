@@ -13,11 +13,13 @@ import java.io.IOException;
 import static se.su.thesis.utils.Constants.*;
 
 public class TakePicture {
-    public TakePicture(Image image, int i, ImageType type) throws IOException {
-        if (type == ImageType.Training)
-            takePicture(image, i);
-        else
-            takeTestPicture(image);
+
+    public TakePicture(Image image) {
+        takeTestPicture(image);
+    }
+
+    public TakePicture(Image image, int pictureNumber, int labelNumber,  ImageType type) throws IOException {
+            takePicture(image, pictureNumber, labelNumber);
     }
 
     private void takeTestPicture(Image image) {
@@ -32,11 +34,11 @@ public class TakePicture {
 
     }
 
-    private void takePicture(Image image, int i) {
+    private void takePicture(Image image, int pictureNumber, int labelNumber) {
         File outputFile = new File(PERSONS_DIRECTORY +
                 Controller.currentPerson + "/" +
                 Controller.personLabelMap.get(Controller.currentPerson) +
-                "-" + Controller.currentPerson.toLowerCase() + "_" + i+ "." + PNG_FORMAT);
+                "-" + Controller.currentPerson.toLowerCase() + "_" + pictureNumber + "." + PNG_FORMAT);
         try {
             writeFile(image, PNG_FORMAT, outputFile);
             System.err.println(outputFile.getAbsolutePath());
