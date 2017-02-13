@@ -17,7 +17,6 @@ import se.su.thesis.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
@@ -25,9 +24,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static se.su.thesis.utils.Constants.LABEL_TEXT;
-import static se.su.thesis.utils.Constants.PERSONS_DIRECTORY;
-import static se.su.thesis.utils.Constants.TEST_DIRECTORY;
+import static se.su.thesis.utils.Constants.*;
 
 public class Controller {
 
@@ -162,7 +159,7 @@ public class Controller {
 
         // detect faces
         if (faceCascade == null) {
-            faceCascade = new CascadeClassifier("src/main/resources/haarcascade_frontalface_alt.xml");
+            faceCascade = new CascadeClassifier("src/main/resources/haarcascade_frontalface_alt2.xml");
         }
 
         faceCascade.detectMultiScale(grayFrame, faces, 1.1, 2, Objdetect.CASCADE_SCALE_IMAGE,
