@@ -17,9 +17,7 @@ import se.su.thesis.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -205,12 +203,12 @@ public class Controller {
         }
 
         String pathToPersonFolder = PERSONS_DIRECTORY + currentPerson + "/";
-        int pictureNumber = checkNumber(pathToPersonFolder);
+        int pictureNumber = getPictureNumber(pathToPersonFolder);
+        int labelNumber = 2;
+        System.out.println("pictureNumber: " + getPictureNumber(pathToPersonFolder));
         // TODO: fix ^ pictureNumber to work as intended.
-
-        pictureNumber++;
         if (imageOfFace != null) {
-            new TakePicture(imageOfFace, pictureNumber, ImageType.Training);
+            new TakePicture(imageOfFace, pictureNumber, labelNumber, ImageType.Training);
         }
     }
 
@@ -222,7 +220,38 @@ public class Controller {
         }
 
         if (imageOfFace != null) {
-            new TakePicture(imageOfFace, -1, ImageType.Test);
+            new TakePicture(imageOfFace);
+        }
+    }
+
+    private int getPictureNumber (String path) {
+        File[] files = new File(path).listFiles();
+        System.out.println("files lenght: " + files.length);
+        if (files.length == 0){
+            return 1;
+        }else{
+            return files.length + 1;
+        }
+    }
+
+    private static int getLabel(String path) {
+        HashSet<Integer> labels = new HashSet<>();
+
+        int label = 1;
+        File[] files = new File(PERSONS_DIRECTORY).listFiles();
+        if (files.length == 0) {
+            return 1;
+        }else {
+            for (Integer intLabel : personLabelMap.values()){
+                labels.add(intLabel);
+            }
+            for (Integer i : labels){
+                if (labels.contains(label)){
+                    label++;
+                }
+            }
+            labels.clear();
+            return label;
         }
     }
 
@@ -232,21 +261,24 @@ public class Controller {
         int index = 0;
 
         // Integer -> int
-        for (Integer i : personLabelMap.values())
+        for (Integer i : personLabelMap.values()){
             labels[index++] = i;
+        }
         Arrays.sort(labels);
 
         if (files != null) {
             for (int i = 1; i <= labels.length; i++) {
                 if (i <= personLabelMap.size()) {
                     if (personLabelMap.values().contains(i)) {
-                        break;
+                        i++;
                     } else {
                         return i;
                     }
                 }
             }
-            return files.length - 1;
+            System.out.println("JAG KOMMER HIT FILES LENGHT");
+            System.out.println("files lenght: " + files.length);
+            return index;
         }
         return 0;
     }
@@ -280,7 +312,7 @@ public class Controller {
             if (files.mkdirs()) {
                 System.err.println("Directory created");
                 currentPerson = name;
-                personLabelMap.put(name, checkNumber(files.getPath()));
+                personLabelMap.put(name, getLabel(PERSONS_DIRECTORY));
                 personLabel.setText(LABEL_TEXT + name);
             } else
                 System.err.println("Failed to create directory");
