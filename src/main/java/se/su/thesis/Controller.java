@@ -323,11 +323,21 @@ public class Controller {
 
     @FXML
     public void openFaceRecognitionDialog() {
-        if (!testPersonMap.isEmpty()) {
-            ChoiceDialog dialog = new ChoiceDialog();
-            for (String s : testPersonMap.keySet()) {
-                if (s.endsWith(".png"))
-                    dialog.getItems().add(s);
+        File[] testPersons = getExistingTestPersons();
+//        if (!testPersonMap.isEmpty()) {
+        if (testPersons.length != 0) {
+
+                ChoiceDialog dialog = new ChoiceDialog();
+
+//            for (String s : testPersonMap.keySet()) {
+//                if (s.endsWith(".png"))
+//                    dialog.getItems().add(s);
+//            }
+
+            for (File s : testPersons) {
+                if (s.getName().contains(".png")){
+                    dialog.getItems().add(s.getName());
+                }
             }
             dialog.setTitle("Face Recognition");
             dialog.setHeaderText("Try to recognize someone from the training sets");
@@ -336,6 +346,10 @@ public class Controller {
             result.ifPresent(this::trainOnFaces);
         } else
             System.err.println("No persons in default folder");
+    }
+
+    private File[] getExistingTestPersons() {
+        return new File(TEST_DIRECTORY).listFiles();
     }
 
     private void trainOnFaces(String name) {
