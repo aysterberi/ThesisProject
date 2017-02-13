@@ -208,6 +208,7 @@ public class Controller {
         System.out.println("pictureNumber: " + getPictureNumber(pathToPersonFolder));
         // TODO: fix ^ pictureNumber to work as intended.
         if (imageOfFace != null) {
+            Recognizer.data_changed = true;
             new TakePicture(imageOfFace, pictureNumber, labelNumber, ImageType.Training);
         }
     }
@@ -314,6 +315,7 @@ public class Controller {
                 currentPerson = name;
                 personLabelMap.put(name, getLabel(PERSONS_DIRECTORY));
                 personLabel.setText(LABEL_TEXT + name);
+                Recognizer.data_changed = true;
             } else
                 System.err.println("Failed to create directory");
         }

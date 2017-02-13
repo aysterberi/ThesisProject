@@ -24,7 +24,7 @@ import static se.su.thesis.utils.Constants.RECOGNIZER_THRESHOLD;
 public class Recognizer {
     private int predictedLabel;
     private FaceRecognizer faceRecognizer = createEigenFaceRecognizer(10, RECOGNIZER_THRESHOLD);
-
+    public static boolean data_changed = true;
 
     public Recognizer() {
 
@@ -36,13 +36,16 @@ public class Recognizer {
 //        Mat testImage = new Mat(test.getHeight(),test.getWidth(), CV_LOAD_IMAGE_GRAYSCALE);
 
     public void recognize(String pathToTestImage) {
-        File personsdata = new File(PERSON_SAVE_DATA);
         Mat testImage = imread(pathToTestImage, CV_LOAD_IMAGE_GRAYSCALE);
-        if (personsdata.exists()){
-            System.out.println("loading data");
-            faceRecognizer.load(PERSON_SAVE_DATA);
-        }else {
+        if (data_changed){
             trainOnPictures();
+        }else {
+            if (new File(PERSON_SAVE_DATA).exists()){
+                System.out.println("loading data");
+                faceRecognizer.load(PERSON_SAVE_DATA);
+            }else {
+                trainOnPictures();
+            }
         }
             predictedLabel = faceRecognizer.predict(testImage);
     }
@@ -74,6 +77,7 @@ public class Recognizer {
         }
         faceRecognizer.train(images, labels);
         faceRecognizer.save(PERSON_SAVE_DATA);
+        data_changed = false;
     }
 
     public int getPredictedLabel() {
