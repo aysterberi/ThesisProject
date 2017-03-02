@@ -206,7 +206,6 @@ public class Controller {
         int pictureNumber = getPictureNumber(pathToPersonFolder);
         int labelNumber = 2;
         System.out.println("pictureNumber: " + getPictureNumber(pathToPersonFolder));
-        // TODO: fix ^ pictureNumber to work as intended.
         if (imageOfFace != null) {
             Recognizer.dataChanged = true;
             new TakePicture(imageOfFace, pictureNumber, labelNumber, ImageType.Training);
@@ -225,12 +224,12 @@ public class Controller {
         }
     }
 
-    private int getPictureNumber (String path) {
+    private int getPictureNumber(String path) {
         File[] files = new File(path).listFiles();
         System.out.println("files lenght: " + files.length);
-        if (files.length == 0){
+        if (files.length == 0) {
             return 1;
-        }else{
+        } else {
             return files.length + 1;
         }
     }
@@ -242,12 +241,12 @@ public class Controller {
         File[] files = new File(PERSONS_DIRECTORY).listFiles();
         if (files.length == 0) {
             return 1;
-        }else {
-            for (Integer intLabel : personLabelMap.values()){
+        } else {
+            for (Integer intLabel : personLabelMap.values()) {
                 labels.add(intLabel);
             }
-            for (Integer i : labels){
-                if (labels.contains(label)){
+            for (Integer i : labels) {
+                if (labels.contains(label)) {
                     label++;
                 }
             }
