@@ -256,34 +256,6 @@ public class Controller {
         }
     }
 
-//    private int checkNumber(String path) {
-//        File[] files = new File(path).listFiles();
-//        int[] labels = new int[personLabelMap.values().size()];
-//        int index = 0;
-//
-//        // Integer -> int
-//        for (Integer i : personLabelMap.values()){
-//            labels[index++] = i;
-//        }
-//        Arrays.sort(labels);
-//
-//        if (files != null) {
-//            for (int i = 1; i <= labels.length; i++) {
-//                if (i <= personLabelMap.size()) {
-//                    if (personLabelMap.values().contains(i)) {
-//                        i++;
-//                    } else {
-//                        return i;
-//                    }
-//                }
-//            }
-//            System.out.println("JAG KOMMER HIT FILES LENGHT");
-//            System.out.println("files lenght: " + files.length);
-//            return index;
-//        }
-//        return 0;
-//    }
-
     /**
      * Called when clicking close in the menu bar
      */
