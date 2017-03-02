@@ -33,6 +33,7 @@ public class Controller {
     private boolean menuPopulated = false;
     private Image imageOfFace;
     private Rect roi;
+    private Mat cropped;
     private Image imageToShow;
     private int faceSize;
     static String currentPerson = "";
@@ -73,9 +74,10 @@ public class Controller {
                     imageToShow = getImage();
                     currentFrame.setImage(imageToShow);
 //                    This code is for liveStream
-//                    if (roi != null){
-//                        new Recognizer().recognize(personPath, Utils.matToBufferedImage(cropped));
-//                    }
+                    if (roi != null){
+                        new Recognizer().recognize(Utils.matToBufferedImage(cropped));
+                        trainOnFaces("liverecog");
+                    }
                 };
 
                 this.timer = Executors.newSingleThreadScheduledExecutor();
@@ -185,7 +187,7 @@ public class Controller {
 
                 imageToShow = Utils.mat2Image(frame);
                 if (roi != null) {
-                    Mat cropped = new Mat(frame, roi);
+                    cropped = new Mat(frame, roi);
                     imageOfFace = Utils.mat2Image(cropped);
                 }
             } catch (Exception e) {
@@ -319,7 +321,7 @@ public class Controller {
     private void trainOnFaces(String name) {
         System.err.println("Recognizing Face of: " + name);
         Recognizer recognizer = new Recognizer();
-        recognizer.recognize(TEST_DIRECTORY + name);
+//        recognizer.recognize(TEST_DIRECTORY + name);
 
         System.err.println("predicted label: " + recognizer.getPredictedLabel());
         System.err.println("The predicted person is: " + recognizer.getNameOfPredictedPerson());
