@@ -18,7 +18,7 @@ public class TakePicture {
         takeTestPicture(image);
     }
 
-    public TakePicture(Image image, int pictureNumber, int labelNumber,  ImageType type) throws IOException {
+    public TakePicture(Image image, int pictureNumber, int labelNumber, ImageType type) throws IOException {
             takePicture(image, pictureNumber, labelNumber);
     }
 
