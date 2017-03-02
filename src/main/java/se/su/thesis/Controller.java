@@ -296,21 +296,14 @@ public class Controller {
     @FXML
     public void openFaceRecognitionDialog() {
         File[] testPersons = getExistingTestPersons();
-//        if (!testPersonMap.isEmpty()) {
         if (testPersons.length != 0) {
+            ChoiceDialog dialog = new ChoiceDialog();
 
-                ChoiceDialog dialog = new ChoiceDialog();
-
-//            for (String s : testPersonMap.keySet()) {
-//                if (s.endsWith(".png"))
-//                    dialog.getItems().add(s);
-//            }
-
-            for (File s : testPersons) {
-                if (s.getName().contains(".png")){
+            for (File s : testPersons)
+                if (s.getName().endsWith(".png"))
                     dialog.getItems().add(s.getName());
-                }
-            }
+
+
             dialog.setTitle("Face Recognition");
             dialog.setHeaderText("Try to recognize someone from the training sets");
             dialog.setContentText("Select the test image to use:");
