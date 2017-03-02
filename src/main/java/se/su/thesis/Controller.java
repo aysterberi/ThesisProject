@@ -157,7 +157,7 @@ public class Controller {
 
         // detect faces
         if (faceCascade == null) {
-            faceCascade = new CascadeClassifier("src/main/resources/haarcascade_frontalface_alt2.xml");
+            faceCascade = new CascadeClassifier(HAAR_CASCADE);
         }
 
         faceCascade.detectMultiScale(grayFrame, faces, 1.1, 2, Objdetect.CASCADE_SCALE_IMAGE,
