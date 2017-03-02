@@ -7,6 +7,7 @@ package se.su.thesis;
 
 import org.bytedeco.javacpp.opencv_core.Mat;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.nio.IntBuffer;
@@ -24,6 +25,7 @@ import static se.su.thesis.utils.Constants.RECOGNIZER_THRESHOLD;
 public class Recognizer {
     private int predictedLabel;
     private FaceRecognizer faceRecognizer = createEigenFaceRecognizer(10, RECOGNIZER_THRESHOLD);
+//    private FaceRecognizer faceRecognizer = createEigenFaceRecognizer();
     public static boolean dataChanged = true;
 
     public Recognizer() {
@@ -31,12 +33,12 @@ public class Recognizer {
     }
 
 // This is code for liveStream recognition
-//    public void recognize(String pathToTrainingDirectory, BufferedImage pathToTestImage) {
-//        BufferedImage test = TakePicture.cropImage(pathToTestImage);
-//        Mat testImage = new Mat(test.getHeight(),test.getWidth(), CV_LOAD_IMAGE_GRAYSCALE);
+    public void recognize(BufferedImage pathToTestImage) {
+        BufferedImage test = TakePicture.cropImage(pathToTestImage);
+        Mat testImage = new Mat(test.getHeight(),test.getWidth(), CV_LOAD_IMAGE_GRAYSCALE);
 
-    public void recognize(String pathToTestImage) {
-        Mat testImage = imread(pathToTestImage, CV_LOAD_IMAGE_GRAYSCALE);
+//    public void recognize(String pathToTestImage) {
+//        Mat testImage = imread(pathToTestImage, CV_LOAD_IMAGE_GRAYSCALE);
         if (dataChanged){
             trainOnPictures();
         }else {
