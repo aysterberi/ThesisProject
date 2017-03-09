@@ -189,6 +189,7 @@ public class Controller {
                 if (roi != null) {
                     cropped = new Mat(frame, roi);
                     imageOfFace = Utils.mat2Image(cropped);
+                    roi = null;
                 }
             } catch (Exception e) {
                 System.err.println("Exception during the image elaboration:" + e);
@@ -207,7 +208,7 @@ public class Controller {
         String pathToPersonFolder = PERSONS_DIRECTORY + currentPerson + "/";
         int pictureNumber = getPictureNumber(pathToPersonFolder);
         int labelNumber = 2;
-        System.out.println("pictureNumber: " + getPictureNumber(pathToPersonFolder));
+        System.err.println("pictureNumber: " + getPictureNumber(pathToPersonFolder));
         if (imageOfFace != null) {
             Recognizer.dataChanged = true;
             new TakePicture(imageOfFace, pictureNumber, labelNumber, ImageType.Training);
@@ -228,7 +229,7 @@ public class Controller {
 
     private int getPictureNumber(String path) {
         File[] files = new File(path).listFiles();
-        System.out.println("files lenght: " + files.length);
+        System.err.println("Files length: " + files.length);
         if (files.length == 0) {
             return 1;
         } else {

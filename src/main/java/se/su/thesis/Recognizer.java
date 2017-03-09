@@ -24,8 +24,8 @@ import static se.su.thesis.utils.Constants.RECOGNIZER_THRESHOLD;
 
 public class Recognizer {
     private int predictedLabel;
-    private FaceRecognizer faceRecognizer = createEigenFaceRecognizer(10, RECOGNIZER_THRESHOLD);
-//    private FaceRecognizer faceRecognizer = createEigenFaceRecognizer();
+    // private FaceRecognizer faceRecognizer = createEigenFaceRecognizer(10, RECOGNIZER_THRESHOLD);
+    private FaceRecognizer faceRecognizer = createEigenFaceRecognizer();
     public static boolean dataChanged = true;
 
     public Recognizer() {
@@ -43,7 +43,7 @@ public class Recognizer {
             trainOnPictures();
         }else {
             if (new File(PERSON_SAVE_DATA).exists()){
-                System.out.println("loading data");
+                System.err.println("loading data");
                 faceRecognizer.load(PERSON_SAVE_DATA);
             }else {
                 trainOnPictures();
@@ -64,7 +64,7 @@ public class Recognizer {
         int counter = 0;
 
         for (File dirs : directories) {
-            System.out.println("Going through " + dirs.getName() + " folder");
+            System.err.println("Going through " + dirs.getName() + " folder");
             File root = new File(dirs.getAbsolutePath());
             File[] imageFiles = root.listFiles(imageFilter);
             IntBuffer labelsBuffer = labels.createBuffer();
