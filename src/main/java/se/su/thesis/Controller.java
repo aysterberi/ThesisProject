@@ -65,7 +65,6 @@ public class Controller {
     @FXML
     protected void startCamera(ActionEvent event) {
         if (!this.cameraActive) {
-            int counter = 0;
             int cameraId = 0;
             this.capture.open(cameraId);
             if (this.capture.isOpened()) {
