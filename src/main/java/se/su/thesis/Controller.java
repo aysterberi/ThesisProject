@@ -29,6 +29,7 @@ public class Controller {
     private VideoCapture capture = new VideoCapture();
     private CascadeClassifier faceCascade;
     private ScheduledExecutorService timer;
+    private ScheduledExecutorService recognizeTimer;
     private boolean cameraActive = false;
     private boolean menuPopulated = false;
     private Image imageOfFace;
@@ -64,6 +65,7 @@ public class Controller {
     @FXML
     protected void startCamera(ActionEvent event) {
         if (!this.cameraActive) {
+            int counter = 0;
             int cameraId = 0;
             this.capture.open(cameraId);
             if (this.capture.isOpened()) {
@@ -74,14 +76,23 @@ public class Controller {
                     imageToShow = getImage();
                     currentFrame.setImage(imageToShow);
 //                    This code is for liveStream
-                    if (roi != null){
-                        new Recognizer().recognize(Utils.matToBufferedImage(cropped));
-                        trainOnFaces("liverecog");
-                    }
+//                    if (roi != null) {
+//                        new Recognizer().recognize(Utils.matToBufferedImage(cropped));
+//                        trainOnFaces("liverecog");
+//                    }
+                };
+
+                Runnable recognizer = () -> {
+                  if (roi != null) {
+                      new Recognizer().recognize(Utils.matToBufferedImage(cropped));
+                      trainOnFaces("liverecog");
+                  }
                 };
 
                 this.timer = Executors.newSingleThreadScheduledExecutor();
+                this.recognizeTimer = Executors.newSingleThreadScheduledExecutor();
                 this.timer.scheduleAtFixedRate(frameGrabber, 0, 33, TimeUnit.MILLISECONDS);
+                this.recognizeTimer.scheduleAtFixedRate(recognizer, 0, 500, TimeUnit.MILLISECONDS);
                 this.pictureButton.setDisable(false);
                 this.testPictureButton.setDisable(false);
                 this.startCameraButton.setText("Stop Camera");
