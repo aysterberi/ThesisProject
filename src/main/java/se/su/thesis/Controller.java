@@ -74,11 +74,6 @@ public class Controller {
                 Runnable frameGrabber = () -> {
                     imageToShow = getImage();
                     currentFrame.setImage(imageToShow);
-//                    This code is for liveStream
-//                    if (roi != null) {
-//                        new Recognizer().recognize(Utils.matToBufferedImage(cropped));
-//                        trainOnFaces("liverecog");
-//                    }
                 };
 
                 Runnable recognizer = () -> {
@@ -88,10 +83,14 @@ public class Controller {
                   }
                 };
 
+                // Frame grabber only captures video output
                 this.timer = Executors.newSingleThreadScheduledExecutor();
-                this.recognizeTimer = Executors.newSingleThreadScheduledExecutor();
                 this.timer.scheduleAtFixedRate(frameGrabber, 0, 33, TimeUnit.MILLISECONDS);
+
+                // recognizer is run twice every second (can be changed to be run more often)
+                this.recognizeTimer = Executors.newSingleThreadScheduledExecutor();
                 this.recognizeTimer.scheduleAtFixedRate(recognizer, 0, 500, TimeUnit.MILLISECONDS);
+
                 this.pictureButton.setDisable(false);
                 this.testPictureButton.setDisable(false);
                 this.startCameraButton.setText("Stop Camera");
