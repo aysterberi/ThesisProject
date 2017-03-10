@@ -6,6 +6,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import org.bytedeco.javacpp.opencv_core;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
@@ -80,19 +81,19 @@ public class Controller {
                 };
 
                 Runnable recognizer = () -> {
-                  if (roi != null) {
-                      faceRecognizer.recognize(Utils.matToBufferedImage(cropped));
-                      trainOnFaces("liverecog");
-                  }
+                    if (roi != null) {
+                        faceRecognizer.recognize(Utils.matToBufferedImage(cropped));
+                        trainOnFaces("liverecog");
+                    }
                 };
 
                 // Frame grabber only captures video output
                 this.timer = Executors.newSingleThreadScheduledExecutor();
-                this.timer.scheduleAtFixedRate(frameGrabber, 0, 33, TimeUnit.MILLISECONDS);
+                this.timer.scheduleAtFixedRate(frameGrabber, 0, FRAME_CAPTURE_RATE_MILLISECONDS, TimeUnit.MILLISECONDS);
 
                 // recognizer is run twice every second (can be changed to be run more often)
                 this.recognizeTimer = Executors.newSingleThreadScheduledExecutor();
-                this.recognizeTimer.scheduleAtFixedRate(recognizer, 0, 500, TimeUnit.MILLISECONDS);
+                this.recognizeTimer.scheduleAtFixedRate(recognizer, 0, RECOGNIZE_RATE_MILLISECONDS, TimeUnit.MILLISECONDS);
 
                 this.pictureButton.setDisable(false);
                 this.testPictureButton.setDisable(false);
@@ -145,8 +146,10 @@ public class Controller {
     private void stopAcquisition() {
         if (this.timer != null && !this.timer.isShutdown()) {
             try {
+                this.recognizeTimer.shutdown();
+                this.recognizeTimer.awaitTermination(RECOGNIZE_RATE_MILLISECONDS, TimeUnit.MILLISECONDS);
                 this.timer.shutdown();
-                this.timer.awaitTermination(33, TimeUnit.MILLISECONDS);
+                this.timer.awaitTermination(FRAME_CAPTURE_RATE_MILLISECONDS, TimeUnit.MILLISECONDS);
             } catch (InterruptedException ie) {
                 System.err.println("Exception in stopping the frame capture, trying to release the camera now");
             }
@@ -201,7 +204,6 @@ public class Controller {
                 if (roi != null) {
                     cropped = new Mat(frame, roi);
                     imageOfFace = Utils.mat2Image(cropped);
-                    roi = null;
                 }
             } catch (Exception e) {
                 System.err.println("Exception during the image elaboration:" + e);
@@ -332,10 +334,10 @@ public class Controller {
     }
 
     private void trainOnFaces(String name) {
-        System.err.println("Recognizing Face of: " + name);
-//        recognizer.recognize(TEST_DIRECTORY + name);
-
-        System.err.println("predicted label: " + faceRecognizer.getPredictedLabel());
-        System.err.println("The predicted person is: " + faceRecognizer.getNameOfPredictedPerson());
+        if (cropped != null) {
+            System.err.println("Recognizing Face of: " + name);
+            System.err.println("predicted label: " + faceRecognizer.getPredictedLabel());
+            System.err.println("The predicted person is: " + faceRecognizer.getNameOfPredictedPerson());
+        }
     }
 }

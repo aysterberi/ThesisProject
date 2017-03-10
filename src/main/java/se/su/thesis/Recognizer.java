@@ -32,6 +32,7 @@ public class Recognizer {
         faceRecognizer = createEigenFaceRecognizer(0, THRESH_TRIANGLE);
         //faceRecognizer = createEigenFaceRecognizer(0, RECOGNIZER_THRESHOLD);
         //faceRecognizer = createEigenFaceRecognizer();
+        this.trainOnPictures();
     }
 
 // This is code for liveStream recognition
@@ -43,7 +44,7 @@ public class Recognizer {
 //        Mat testImage = imread(pathToTestImage, CV_LOAD_IMAGE_GRAYSCALE);
         if (dataChanged){
             trainOnPictures();
-        }else {
+        } else {
             if (new File(PERSON_SAVE_DATA).exists()){
                 System.err.println("loading data");
                 faceRecognizer.load(PERSON_SAVE_DATA);
