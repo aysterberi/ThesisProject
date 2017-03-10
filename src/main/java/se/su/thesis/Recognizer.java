@@ -19,13 +19,15 @@ import static org.bytedeco.javacpp.opencv_face.FaceRecognizer;
 import static org.bytedeco.javacpp.opencv_face.createEigenFaceRecognizer;
 import static org.bytedeco.javacpp.opencv_imgcodecs.CV_LOAD_IMAGE_GRAYSCALE;
 import static org.bytedeco.javacpp.opencv_imgcodecs.imread;
+import static org.opencv.imgproc.Imgproc.THRESH_TRIANGLE;
 import static se.su.thesis.utils.Constants.PERSON_SAVE_DATA;
 import static se.su.thesis.utils.Constants.RECOGNIZER_THRESHOLD;
 
 public class Recognizer {
     private int predictedLabel;
-    // private FaceRecognizer faceRecognizer = createEigenFaceRecognizer(10, RECOGNIZER_THRESHOLD);
-    private FaceRecognizer faceRecognizer = createEigenFaceRecognizer();
+    private FaceRecognizer faceRecognizer = createEigenFaceRecognizer(0, THRESH_TRIANGLE);
+    //private FaceRecognizer faceRecognizer = createEigenFaceRecognizer(0, RECOGNIZER_THRESHOLD);
+    // private FaceRecognizer faceRecognizer = createEigenFaceRecognizer();
     public static boolean dataChanged = true;
 
     public Recognizer() {
