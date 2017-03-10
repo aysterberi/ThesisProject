@@ -66,7 +66,6 @@ public class Controller {
     @FXML
     protected void startCamera(ActionEvent event) {
         if (!this.cameraActive) {
-            int counter = 0;
             int cameraId = 0;
             this.capture.open(cameraId);
             if (this.capture.isOpened()) {
@@ -85,10 +84,14 @@ public class Controller {
                   }
                 };
 
+                // Frame grabber only captures video output
                 this.timer = Executors.newSingleThreadScheduledExecutor();
-                this.recognizeTimer = Executors.newSingleThreadScheduledExecutor();
                 this.timer.scheduleAtFixedRate(frameGrabber, 0, 33, TimeUnit.MILLISECONDS);
+
+                // recognizer is run twice every second (can be changed to be run more often)
+                this.recognizeTimer = Executors.newSingleThreadScheduledExecutor();
                 this.recognizeTimer.scheduleAtFixedRate(recognizer, 0, 500, TimeUnit.MILLISECONDS);
+
                 this.pictureButton.setDisable(false);
                 this.testPictureButton.setDisable(false);
                 this.startCameraButton.setText("Stop Camera");
