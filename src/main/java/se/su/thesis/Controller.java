@@ -36,6 +36,7 @@ public class Controller {
     private Rect roi;
     private Mat cropped;
     private Image imageToShow;
+    private Recognizer faceRecognizer;
     private int faceSize;
     static String currentPerson = "";
     static HashMap<String, Integer> personLabelMap = new HashMap<>();
@@ -75,17 +76,12 @@ public class Controller {
                 Runnable frameGrabber = () -> {
                     imageToShow = getImage();
                     currentFrame.setImage(imageToShow);
-//                    This code is for liveStream
-//                    if (roi != null) {
-//                        new Recognizer().recognize(Utils.matToBufferedImage(cropped));
-//                        trainOnFaces("liverecog");
-//                    }
                 };
 
                 Runnable recognizer = () -> {
                   if (roi != null) {
                       new Recognizer().recognize(Utils.matToBufferedImage(cropped));
-                      trainOnFaces("liverecog");
+                      trainOnFaces("liverecog", faceRecognizer);
                   }
                 };
 
@@ -321,7 +317,7 @@ public class Controller {
             dialog.setHeaderText("Try to recognize someone from the training sets");
             dialog.setContentText("Select the test image to use:");
             Optional<String> result = dialog.showAndWait();
-            result.ifPresent(this::trainOnFaces);
+            //result.ifPresent(this::trainOnFaces);
         } else
             System.err.println("No persons in default folder");
     }
@@ -330,9 +326,8 @@ public class Controller {
         return new File(TEST_DIRECTORY).listFiles();
     }
 
-    private void trainOnFaces(String name) {
+    private void trainOnFaces(String name, Recognizer recognizer) {
         System.err.println("Recognizing Face of: " + name);
-        Recognizer recognizer = new Recognizer();
 //        recognizer.recognize(TEST_DIRECTORY + name);
 
         System.err.println("predicted label: " + recognizer.getPredictedLabel());
