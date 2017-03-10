@@ -105,7 +105,7 @@ public class Recognizer {
         return size;
     }
 
-    private static Object getKeyFromValue(Map hm, Object value) {
+    private Object getKeyFromValue(Map hm, Object value) {
         for (Object o : hm.keySet()) {
             if (hm.get(o).equals(value)) {
                 return o;
