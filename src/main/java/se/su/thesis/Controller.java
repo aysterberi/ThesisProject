@@ -65,6 +65,8 @@ public class Controller {
 
     @FXML
     protected void startCamera(ActionEvent event) {
+        if (faceRecognizer == null)
+            faceRecognizer = new Recognizer();
         if (!this.cameraActive) {
             int cameraId = 0;
             this.capture.open(cameraId);
