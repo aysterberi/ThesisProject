@@ -25,13 +25,13 @@ import static se.su.thesis.utils.Constants.RECOGNIZER_THRESHOLD;
 
 public class Recognizer {
     private int predictedLabel;
-    private FaceRecognizer faceRecognizer = createEigenFaceRecognizer(0, THRESH_TRIANGLE);
-    //private FaceRecognizer faceRecognizer = createEigenFaceRecognizer(0, RECOGNIZER_THRESHOLD);
-    // private FaceRecognizer faceRecognizer = createEigenFaceRecognizer();
+    private FaceRecognizer faceRecognizer;
     public static boolean dataChanged = true;
 
     public Recognizer() {
-
+        faceRecognizer = createEigenFaceRecognizer(0, THRESH_TRIANGLE);
+        //faceRecognizer = createEigenFaceRecognizer(0, RECOGNIZER_THRESHOLD);
+        //faceRecognizer = createEigenFaceRecognizer();
     }
 
 // This is code for liveStream recognition
@@ -112,5 +112,9 @@ public class Recognizer {
             }
         }
         return null;
+    }
+
+    public FaceRecognizer getFaceRecognizer() {
+        return faceRecognizer;
     }
 }
