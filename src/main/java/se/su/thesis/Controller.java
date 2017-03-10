@@ -79,8 +79,8 @@ public class Controller {
 
                 Runnable recognizer = () -> {
                   if (roi != null) {
-                      new Recognizer().recognize(Utils.matToBufferedImage(cropped));
-                      trainOnFaces("liverecog", faceRecognizer);
+                      faceRecognizer.recognize(Utils.matToBufferedImage(cropped));
+                      trainOnFaces("liverecog");
                   }
                 };
 
@@ -320,7 +320,7 @@ public class Controller {
             dialog.setHeaderText("Try to recognize someone from the training sets");
             dialog.setContentText("Select the test image to use:");
             Optional<String> result = dialog.showAndWait();
-            //result.ifPresent(this::trainOnFaces);
+            result.ifPresent(this::trainOnFaces);
         } else
             System.err.println("No persons in default folder");
     }
@@ -329,11 +329,11 @@ public class Controller {
         return new File(TEST_DIRECTORY).listFiles();
     }
 
-    private void trainOnFaces(String name, Recognizer recognizer) {
+    private void trainOnFaces(String name) {
         System.err.println("Recognizing Face of: " + name);
 //        recognizer.recognize(TEST_DIRECTORY + name);
 
-        System.err.println("predicted label: " + recognizer.getPredictedLabel());
-        System.err.println("The predicted person is: " + recognizer.getNameOfPredictedPerson());
+        System.err.println("predicted label: " + faceRecognizer.getPredictedLabel());
+        System.err.println("The predicted person is: " + faceRecognizer.getNameOfPredictedPerson());
     }
 }
