@@ -6,7 +6,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import org.bytedeco.javacpp.opencv_core;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
@@ -18,7 +17,9 @@ import se.su.thesis.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -33,6 +34,7 @@ public class Controller {
     private ScheduledExecutorService recognizeTimer;
     private boolean cameraActive = false;
     private boolean menuPopulated = false;
+    private boolean faceFound = false;
     private Image imageOfFace;
     private Rect roi;
     private Mat cropped;
@@ -81,7 +83,7 @@ public class Controller {
                 };
 
                 Runnable recognizer = () -> {
-                    if (roi != null) {
+                    if (faceFound) {
                         faceRecognizer.recognize(Utils.matToBufferedImage(cropped));
                         trainOnFaces("liverecog");
                     }
@@ -175,6 +177,7 @@ public class Controller {
         // detect faces
         if (faceCascade == null) {
             faceCascade = new CascadeClassifier(HAAR_CASCADE);
+            faceFound = true;
         }
 
         faceCascade.detectMultiScale(grayFrame, faces, 1.1, 2, Objdetect.CASCADE_SCALE_IMAGE,
@@ -187,6 +190,11 @@ public class Controller {
                     new Scalar(0, 255, 0), 3);
             roi = facesRect.clone();
         }
+        if (faces.toArray().length == 0){
+            faceFound = false;
+        }else {
+            faceFound = true;
+        }
     }
 
     private Image getImage() {
@@ -197,11 +205,15 @@ public class Controller {
             try {
                 this.capture.read(frame);
 
-                if (!frame.empty())
+                if (!frame.empty()){
                     faceDetect(frame);
+                }
+//                else {
+//                    faceFound = false;
+//                }
 
                 imageToShow = Utils.mat2Image(frame);
-                if (roi != null) {
+                if (faceFound) {
                     cropped = new Mat(frame, roi);
                     imageOfFace = Utils.mat2Image(cropped);
                 }
@@ -334,7 +346,7 @@ public class Controller {
     }
 
     private void trainOnFaces(String name) {
-        if (cropped != null) {
+        if (faceFound) {
             System.err.println("Recognizing Face of: " + name);
             System.err.println("predicted label: " + faceRecognizer.getPredictedLabel());
             System.err.println("The predicted person is: " + faceRecognizer.getNameOfPredictedPerson());
