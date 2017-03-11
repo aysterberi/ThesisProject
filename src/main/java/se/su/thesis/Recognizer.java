@@ -19,9 +19,7 @@ import static org.bytedeco.javacpp.opencv_face.FaceRecognizer;
 import static org.bytedeco.javacpp.opencv_face.createEigenFaceRecognizer;
 import static org.bytedeco.javacpp.opencv_imgcodecs.CV_LOAD_IMAGE_GRAYSCALE;
 import static org.bytedeco.javacpp.opencv_imgcodecs.imread;
-import static org.opencv.imgproc.Imgproc.THRESH_TRIANGLE;
 import static se.su.thesis.utils.Constants.PERSON_SAVE_DATA;
-import static se.su.thesis.utils.Constants.RECOGNIZER_THRESHOLD;
 
 public class Recognizer {
     private int predictedLabel;
@@ -29,10 +27,10 @@ public class Recognizer {
     public static boolean dataChanged = true;
 
     public Recognizer() {
-        faceRecognizer = createEigenFaceRecognizer(0, THRESH_TRIANGLE);
+//        faceRecognizer = createEigenFaceRecognizer(0, THRESH_TRIANGLE);
         //faceRecognizer = createEigenFaceRecognizer(0, RECOGNIZER_THRESHOLD);
-        //faceRecognizer = createEigenFaceRecognizer();
-        this.trainOnPictures();
+        faceRecognizer = createEigenFaceRecognizer();
+//        this.trainOnPictures();
     }
 
 // This is code for liveStream recognition
@@ -62,27 +60,29 @@ public class Recognizer {
             return name.endsWith(".jpg") || name.endsWith(".pgm") || name.endsWith(".png");
         };
         int result = calculateFileLength(directories, imageFilter);
-        MatVector images = new MatVector(result);
-        Mat labels = new Mat(result, 1, CV_32SC1);
-        int counter = 0;
+        if (result != 0) {
+            MatVector images = new MatVector(result);
+            Mat labels = new Mat(result, 1, CV_32SC1);
+            int counter = 0;
 
-        for (File dirs : directories) {
-            System.err.println("Going through " + dirs.getName() + " folder");
-            File root = new File(dirs.getAbsolutePath());
-            File[] imageFiles = root.listFiles(imageFilter);
-            IntBuffer labelsBuffer = labels.createBuffer();
+            for (File dirs : directories) {
+                System.err.println("Going through " + dirs.getName() + " folder");
+                File root = new File(dirs.getAbsolutePath());
+                File[] imageFiles = root.listFiles(imageFilter);
+                IntBuffer labelsBuffer = labels.createBuffer();
 
-            for (File f : imageFiles) {
-                Mat image = imread(f.getAbsolutePath(), CV_LOAD_IMAGE_GRAYSCALE);
-                int label = Integer.parseInt(f.getName().split("\\-")[0]);
-                images.put(counter, image);
-                labelsBuffer.put(counter, label);
-                counter++;
+                for (File f : imageFiles) {
+                    Mat image = imread(f.getAbsolutePath(), CV_LOAD_IMAGE_GRAYSCALE);
+                    int label = Integer.parseInt(f.getName().split("\\-")[0]);
+                    images.put(counter, image);
+                    labelsBuffer.put(counter, label);
+                    counter++;
+                }
             }
+            faceRecognizer.train(images, labels);
+            faceRecognizer.save(PERSON_SAVE_DATA);
+            dataChanged = false;
         }
-        faceRecognizer.train(images, labels);
-        faceRecognizer.save(PERSON_SAVE_DATA);
-        dataChanged = false;
     }
 
     public int getPredictedLabel() {
