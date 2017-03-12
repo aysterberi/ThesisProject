@@ -38,6 +38,7 @@ public class Controller {
     private Image imageOfFace;
     private Rect roi;
     private Mat cropped;
+    private String predictedPersonName = null;
     private Image imageToShow;
     private Recognizer faceRecognizer;
     private int faceSize;
@@ -354,9 +355,14 @@ public class Controller {
         System.err.println("Live Recognition Initialized");
         System.err.println("predicted label: " + recognize.getPredictedLabel());
         System.err.println("The predicted person is: " + recognize.getNameOfPredictedPerson());
-        String predictedPersonName = recognize.getNameOfPredictedPerson();
+        if (predictedPersonName == null){
+            predictedPersonName = recognize.getNameOfPredictedPerson();
+        }
 
         //Need to do this because we are in another thread so we have to make the uithread change the name.
-        Platform.runLater(() -> setCurrentRecognizedPerson(predictedPersonName));
+        if (!predictedPersonName.equals(recognize.getNameOfPredictedPerson())){
+            predictedPersonName = recognize.getNameOfPredictedPerson();
+            Platform.runLater(() -> setCurrentRecognizedPerson(predictedPersonName));
+        }
     }
 }
