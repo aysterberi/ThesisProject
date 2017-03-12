@@ -28,6 +28,17 @@
                         <Insets right="5.0" />
                     </padding>
                 </Label>
+                <Label fx:id="recognizedLabel" alignment="TOP_RIGHT" contentDisplay="RIGHT" layoutX="602.0" layoutY="179.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="38.0" prefWidth="422.0" text="Recognized Person: ">
+                    <font>
+                        <Font name="System Bold" size="12.0" />
+                    </font>
+                    <opaqueInsets>
+                        <Insets />
+                    </opaqueInsets>
+                    <padding>
+                        <Insets right="5.0" />
+                    </padding>
+                </Label>
             <FlowPane alignment="CENTER" hgap="20.0" layoutY="170.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="804.0" rowValignment="TOP">
                <children>
                       <Button fx:id="startCameraButton" alignment="CENTER" mnemonicParsing="false" onAction="#startCamera" prefHeight="0.0" prefWidth="91.0" text="Start Camera">
