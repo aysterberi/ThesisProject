@@ -23,15 +23,15 @@ public class TakePicture {
     }
 
     private void takeTestPicture(Image image) {
-        File outputFile = new File(TEST_DIRECTORY + Controller.currentPerson + "."+PNG_FORMAT);
+//        File outputFile = new File(TEST_DIRECTORY + Controller.currentPerson + "."+PNG_FORMAT);
+        File outputFile = new File(TEST_DIRECTORY + "test" + "."+PNG_FORMAT);
         try {
             writeFile(image, PNG_FORMAT, outputFile);
-            System.err.println(outputFile.getAbsolutePath());
-            System.err.println("Snapped test picture");
+//            System.err.println(outputFile.getAbsolutePath());
+//            System.err.println("Snapped test picture");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     private void takePicture(Image image, int pictureNumber, int labelNumber) {
