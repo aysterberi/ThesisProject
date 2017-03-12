@@ -2,6 +2,7 @@ package se.su.thesis.utils;
 
 public class Constants {
     public static final String LABEL_TEXT = "Current Person: ";
+    public static final String Recognized_LABEL_TEXT = "Recognized Person: ";
     public static final String PERSONS_DIRECTORY = "src/main/resources/persons/";
     public static final String TEST_DIRECTORY = "src/main/resources/test/";
     public static final String PERSON_SAVE_DATA = "src/main/resources/persons/personsdata";
