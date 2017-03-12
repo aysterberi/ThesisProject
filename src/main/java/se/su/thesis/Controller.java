@@ -1,5 +1,6 @@
 package se.su.thesis;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -27,7 +28,6 @@ import java.util.concurrent.TimeUnit;
 import static se.su.thesis.utils.Constants.*;
 
 public class Controller {
-
     private VideoCapture capture = new VideoCapture();
     private CascadeClassifier faceCascade;
     private ScheduledExecutorService timer;
@@ -58,6 +58,8 @@ public class Controller {
     @FXML
     private Label personLabel;
     @FXML
+    private Label recognizedLabel;
+    @FXML
     private Menu existingPersonsMenu;
     @FXML
     private Menu topMenu;
@@ -84,8 +86,10 @@ public class Controller {
 
                 Runnable recognizer = () -> {
                     if (faceFound) {
-                        faceRecognizer.recognize(Utils.matToBufferedImage(cropped));
-                        trainOnFaces("liverecog");
+                        new TakePicture(imageOfFace);
+//                        faceRecognizer.recognize(Utils.matToBufferedImage(cropped));
+                        faceRecognizer.recognize();
+                        trainOnFaces(faceRecognizer);
                     }
                 };
 
@@ -136,6 +140,10 @@ public class Controller {
     private void setCurrentPerson(String name) {
         currentPerson = name;
         personLabel.setText(LABEL_TEXT + name);
+    }
+
+    private void setCurrentRecognizedPerson(String name) {
+        recognizedLabel.setText(Recognized_LABEL_TEXT + name);
     }
 
     /**
@@ -208,9 +216,6 @@ public class Controller {
                 if (!frame.empty()){
                     faceDetect(frame);
                 }
-//                else {
-//                    faceFound = false;
-//                }
 
                 imageToShow = Utils.mat2Image(frame);
                 if (faceFound) {
@@ -331,12 +336,12 @@ public class Controller {
                 if (s.getName().endsWith(".png"))
                     dialog.getItems().add(s.getName());
 
-
             dialog.setTitle("Face Recognition");
             dialog.setHeaderText("Try to recognize someone from the training sets");
             dialog.setContentText("Select the test image to use:");
             Optional<String> result = dialog.showAndWait();
-            result.ifPresent(this::trainOnFaces);
+            //
+//            result.ifPresent(this::trainOnFaces);
         } else
             System.err.println("No persons in default folder");
     }
@@ -345,11 +350,13 @@ public class Controller {
         return new File(TEST_DIRECTORY).listFiles();
     }
 
-    private void trainOnFaces(String name) {
-        if (faceFound) {
-            System.err.println("Recognizing Face of: " + name);
-            System.err.println("predicted label: " + faceRecognizer.getPredictedLabel());
-            System.err.println("The predicted person is: " + faceRecognizer.getNameOfPredictedPerson());
-        }
+    private void trainOnFaces(Recognizer recognize) {
+        System.err.println("Live Recognition Initialized");
+        System.err.println("predicted label: " + recognize.getPredictedLabel());
+        System.err.println("The predicted person is: " + recognize.getNameOfPredictedPerson());
+        String predictedPersonName = recognize.getNameOfPredictedPerson();
+
+        //Need to do this because we are in another thread so we have to make the uithread change the name.
+        Platform.runLater(() -> setCurrentRecognizedPerson(predictedPersonName));
     }
 }
