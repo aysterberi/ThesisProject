@@ -7,7 +7,6 @@ package se.su.thesis;
 
 import org.bytedeco.javacpp.opencv_core.Mat;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.nio.IntBuffer;
@@ -25,23 +24,31 @@ public class Recognizer {
     private int predictedLabel;
     private FaceRecognizer faceRecognizer;
     public static boolean dataChanged = true;
+    // I used these to try to find best parameters
+//    private double threshhold;
+//    private int firstParameter = 1;
 
     public Recognizer() {
 //        faceRecognizer = createEigenFaceRecognizer(0, THRESH_TRIANGLE);
-        //faceRecognizer = createEigenFaceRecognizer(0, RECOGNIZER_THRESHOLD);
-        faceRecognizer = createEigenFaceRecognizer();
-//        this.trainOnPictures();
+        faceRecognizer = createEigenFaceRecognizer(2, 4000);
+//        faceRecognizer = createEigenFaceRecognizer();
+        this.trainOnPictures();
     }
 
 // This is code for liveStream recognition
-    public void recognize(BufferedImage pathToTestImage) {
-        BufferedImage test = TakePicture.cropImage(pathToTestImage);
-        Mat testImage = new Mat(test.getHeight(),test.getWidth(), CV_LOAD_IMAGE_GRAYSCALE);
+//    public void recognize(BufferedImage pathToTestImage) {
+//        BufferedImage test = TakePicture.cropImage(pathToTestImage);
 
 //    public void recognize(String pathToTestImage) {
 //        Mat testImage = imread(pathToTestImage, CV_LOAD_IMAGE_GRAYSCALE);
+
+    public void recognize(){
+        // I used these to try to find best parameters
+//        faceRecognizer = createEigenFaceRecognizer(firstParameter, threshhold);
+        Mat testImage = imread("src/main/resources/test/test.png", CV_LOAD_IMAGE_GRAYSCALE);
         if (dataChanged){
             trainOnPictures();
+            System.out.println("IF DATACHANGE TRUE");
         } else {
             if (new File(PERSON_SAVE_DATA).exists()){
                 System.err.println("loading data");
@@ -50,7 +57,23 @@ public class Recognizer {
                 trainOnPictures();
             }
         }
-            predictedLabel = faceRecognizer.predict(testImage);
+
+        predictedLabel = faceRecognizer.predict(testImage);
+
+        // I used these to try to find best parameters
+
+//            if (predictedLabel == 0){
+//                threshhold += 500.0;
+//                if (threshhold > 9999.0){
+//                    firstParameter += 1;
+//                    threshhold = 500;
+//                }
+//            } else if (predictedLabel == 2){
+//                System.out.println("Predicted Label " + predictedLabel);
+////                System.out.println(threshhold);
+//                System.out.println(faceRecognizer.getThreshold());
+//                System.out.println(firstParameter);
+//            }
     }
 
     private void trainOnPictures() {
@@ -81,6 +104,8 @@ public class Recognizer {
             }
             faceRecognizer.train(images, labels);
             faceRecognizer.save(PERSON_SAVE_DATA);
+            System.out.println(faceRecognizer.getThreshold());
+            System.out.println(faceRecognizer.getLabelInfo(predictedLabel));
             dataChanged = false;
         }
     }
@@ -113,9 +138,5 @@ public class Recognizer {
             }
         }
         return null;
-    }
-
-    public FaceRecognizer getFaceRecognizer() {
-        return faceRecognizer;
     }
 }
