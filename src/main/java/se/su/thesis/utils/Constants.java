@@ -10,6 +10,6 @@ public class Constants {
     public static final String HAAR_CASCADE = "src/main/resources/haarcascade_frontalface_alt2.xml";
     public static final double RECOGNIZER_THRESHOLD = 5000.0;
     public static final int IMAGE_SIZE = 300;
-    public static final int RECOGNIZE_RATE_MILLISECONDS = 500;
+    public static final int RECOGNIZE_RATE_MILLISECONDS = 1000;
     public static final int FRAME_CAPTURE_RATE_MILLISECONDS = 33;
 }
