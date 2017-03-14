@@ -12,58 +12,71 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.control.RadioButton?>
 
-<BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se.su.thesis.Controller">
+<BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            nodeOrientation="RIGHT_TO_LEFT" prefHeight="768.0" prefWidth="1024.0"
+            xmlns="http://javafx.com/javafx/8.0.66" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="se.su.thesis.Controller">
     <bottom>
         <Pane prefHeight="200.0" prefWidth="200.0">
             <children>
-                <Label fx:id="personLabel" alignment="TOP_RIGHT" contentDisplay="RIGHT" layoutX="602.0" layoutY="163.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="38.0" prefWidth="422.0" text="Current Person: ">
+                <Label fx:id="personLabel" alignment="TOP_RIGHT" contentDisplay="RIGHT" layoutX="602.0" layoutY="163.0"
+                       nodeOrientation="RIGHT_TO_LEFT" prefHeight="38.0" prefWidth="422.0" text="Current Person: ">
                     <font>
-                        <Font name="System Bold" size="12.0" />
+                        <Font name="System Bold" size="12.0"/>
                     </font>
                     <opaqueInsets>
-                        <Insets />
+                        <Insets/>
                     </opaqueInsets>
                     <padding>
-                        <Insets right="5.0" />
+                        <Insets right="5.0"/>
                     </padding>
                 </Label>
-                <Label fx:id="recognizedLabel" alignment="TOP_RIGHT" contentDisplay="RIGHT" layoutX="602.0" layoutY="179.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="38.0" prefWidth="422.0" text="Recognized Person: ">
+                <Label fx:id="recognizedLabel" alignment="TOP_RIGHT" contentDisplay="RIGHT" layoutX="602.0"
+                       layoutY="179.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="38.0" prefWidth="422.0"
+                       text="Recognized Person: ">
                     <font>
-                        <Font name="System Bold" size="12.0" />
+                        <Font name="System Bold" size="12.0"/>
                     </font>
                     <opaqueInsets>
-                        <Insets />
+                        <Insets/>
                     </opaqueInsets>
                     <padding>
-                        <Insets right="5.0" />
+                        <Insets right="5.0"/>
                     </padding>
                 </Label>
-            <FlowPane alignment="CENTER" hgap="20.0" layoutY="170.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="804.0" rowValignment="TOP">
-               <children>
-                      <Button fx:id="startCameraButton" alignment="CENTER" mnemonicParsing="false" onAction="#startCamera" prefHeight="0.0" prefWidth="91.0" text="Start Camera">
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                  </Button>
-                      <Button fx:id="pictureButton" alignment="CENTER" disable="true" mnemonicParsing="false" onAction="#takePicture" text="Snap Training Picture" />
-                      <Button fx:id="testPictureButton" alignment="CENTER" disable="true" mnemonicParsing="false" onAction="#takeTestPicture" text="Snap Test Picture" />
-               </children>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </FlowPane>
+                <FlowPane alignment="CENTER" hgap="20.0" layoutY="170.0" nodeOrientation="LEFT_TO_RIGHT"
+                          prefHeight="25.0" prefWidth="804.0" rowValignment="TOP">
+                    <children>
+                        <Button fx:id="startCameraButton" alignment="CENTER" mnemonicParsing="false"
+                                onAction="#startCamera" prefHeight="0.0" prefWidth="91.0" text="Start Camera">
+                            <opaqueInsets>
+                                <Insets/>
+                            </opaqueInsets>
+                        </Button>
+                        <Button fx:id="pictureButton" alignment="CENTER" disable="true" mnemonicParsing="false"
+                                onAction="#takePicture" text="Snap Training Picture"/>
+                        <Button fx:id="testPictureButton" alignment="CENTER" disable="true" mnemonicParsing="false"
+                                onAction="#takeTestPicture" text="Snap Test Picture"/>
+                        <RadioButton fx:id="recognitionRadioButton" alignment="CENTER" disable="true" mnemonicParsing="false"
+                                     onAction="#setRecognizing" text="Live recognition" />
+                    </children>
+                    <opaqueInsets>
+                        <Insets/>
+                    </opaqueInsets>
+                </FlowPane>
             </children>
         </Pane>
     </bottom>
     <center>
         <ImageView fx:id="currentFrame" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
             <BorderPane.margin>
-                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
             </BorderPane.margin>
-         <viewport>
-            <Rectangle2D />
-         </viewport>
+            <viewport>
+                <Rectangle2D/>
+            </viewport>
         </ImageView>
     </center>
     <top>
@@ -71,18 +84,21 @@
             <menus>
                 <Menu fx:id="topMenu" mnemonicParsing="false" text="File">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#createNewPerson" text="New Person" />
-                        <Menu fx:id="existingPersonsMenu" mnemonicParsing="false" onAction="#setUpExistingPersonsMenu" text="Existing Person" />
-                        <MenuItem mnemonicParsing="false" onAction="#closeProgram" text="Close" />
+                        <MenuItem mnemonicParsing="false" onAction="#createNewPerson" text="New Person"/>
+                        <Menu fx:id="existingPersonsMenu" mnemonicParsing="false" onAction="#setUpExistingPersonsMenu"
+                              text="Existing Person"/>
+                        <MenuItem mnemonicParsing="false" onAction="#closeProgram" text="Close"/>
                     </items>
                 </Menu>
-            <Menu mnemonicParsing="false" text="Face Recognition">
-               <items>
-                  <MenuItem fx:id="trainMenuButton" mnemonicParsing="false" onAction="#openFaceRecognitionDialog" text="Recognize..." />
-               </items></Menu>
+                <Menu mnemonicParsing="false" text="Face Recognition">
+                    <items>
+                        <MenuItem fx:id="trainMenuButton" mnemonicParsing="false" onAction="#openFaceRecognitionDialog"
+                                  text="Recognize..."/>
+                    </items>
+                </Menu>
             </menus>
             <BorderPane.margin>
-                <Insets />
+                <Insets/>
             </BorderPane.margin>
         </MenuBar>
     </top>

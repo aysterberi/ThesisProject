@@ -35,6 +35,7 @@ public class Controller {
     private boolean cameraActive = false;
     private boolean menuPopulated = false;
     private boolean faceFound = false;
+    private boolean liveRecognition = false;
     private Image imageOfFace;
     private Rect roi;
     private Mat cropped;
@@ -46,6 +47,8 @@ public class Controller {
     static HashMap<String, Integer> personLabelMap = new HashMap<>();
     static HashMap<String, Integer> testPersonMap = new HashMap<>();
 
+    @FXML
+    public RadioButton recognitionRadioButton;
     @FXML
     private Button startCameraButton;
     @FXML
@@ -86,7 +89,7 @@ public class Controller {
                 };
 
                 Runnable recognizer = () -> {
-                    if (faceFound) {
+                    if (faceFound && liveRecognition) {
                         new TakePicture(imageOfFace);
 //                        faceRecognizer.recognize(Utils.matToBufferedImage(cropped));
                         faceRecognizer.recognize();
@@ -102,6 +105,7 @@ public class Controller {
                 this.recognizeTimer = Executors.newSingleThreadScheduledExecutor();
                 this.recognizeTimer.scheduleAtFixedRate(recognizer, 0, RECOGNIZE_RATE_MILLISECONDS, TimeUnit.MILLISECONDS);
 
+                this.recognitionRadioButton.setDisable(false);
                 this.pictureButton.setDisable(false);
                 this.testPictureButton.setDisable(false);
                 this.startCameraButton.setText("Stop Camera");
@@ -109,6 +113,7 @@ public class Controller {
                 System.err.println("Impossible to open the camera connection");
             }
         } else {
+            this.recognitionRadioButton.setDisable(true);
             this.pictureButton.setDisable(true);
             this.cameraActive = false;
             this.startCameraButton.setText("Start Camera");
@@ -364,5 +369,9 @@ public class Controller {
             predictedPersonName = recognize.getNameOfPredictedPerson();
             Platform.runLater(() -> setCurrentRecognizedPerson(predictedPersonName));
         }
+    }
+
+    public void setRecognizing() {
+        this.liveRecognition = recognitionRadioButton.isSelected();
     }
 }
