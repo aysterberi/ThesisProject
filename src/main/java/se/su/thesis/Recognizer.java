@@ -42,10 +42,10 @@ public class Recognizer {
 //    public void recognize(String pathToTestImage) {
 //        Mat testImage = imread(pathToTestImage, CV_LOAD_IMAGE_GRAYSCALE);
 
-    public void recognize(){
+    public void recognize(String filepath){
         // I used these to try to find best parameters
 //        faceRecognizer = createEigenFaceRecognizer(firstParameter, threshhold);
-        Mat testImage = imread("src/main/resources/test/test.png", CV_LOAD_IMAGE_GRAYSCALE);
+        Mat testImage = imread(filepath, CV_LOAD_IMAGE_GRAYSCALE);
         if (dataChanged){
             trainOnPictures();
             System.out.println("IF DATACHANGE TRUE");
