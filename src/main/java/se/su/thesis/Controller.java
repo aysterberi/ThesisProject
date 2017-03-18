@@ -93,7 +93,7 @@ public class Controller {
                         new TakePicture(imageOfFace);
 //                        faceRecognizer.recognize(Utils.matToBufferedImage(cropped));
                         faceRecognizer.recognize("src/main/resources/test/test.png");
-                        livePrediction(faceRecognizer);
+                        facePrediction(faceRecognizer);
                     }
                 };
 
@@ -347,7 +347,7 @@ public class Controller {
             dialog.setContentText("Select the test image to use:");
             Optional<String> result = dialog.showAndWait();
             //
-            result.ifPresent(this::manualPrediction);
+            result.ifPresent(this::manualRecognizer);
         } else
             System.err.println("No persons in default folder");
     }
@@ -356,23 +356,13 @@ public class Controller {
         return new File(TEST_DIRECTORY).listFiles();
     }
 
-    private void manualPrediction(String personName) {
+    private void manualRecognizer(String personName) {
         Recognizer manualRecognizer = new Recognizer();
         manualRecognizer.recognize(TEST_DIRECTORY + personName);
-        System.err.println("predicted label: " + manualRecognizer.getPredictedLabel());
-        System.err.println("The predicted person is: " + manualRecognizer.getNameOfPredictedPerson());
-        if (predictedPersonName == null){
-            predictedPersonName = manualRecognizer.getNameOfPredictedPerson();
-        }
-
-        //Need to do this because we are in another thread so we have to make the uithread change the name.
-        if (!predictedPersonName.equals(manualRecognizer.getNameOfPredictedPerson())){
-            predictedPersonName = manualRecognizer.getNameOfPredictedPerson();
-            Platform.runLater(() -> setCurrentRecognizedPerson(predictedPersonName));
-        }
+        facePrediction(manualRecognizer);
     }
 
-    private void livePrediction(Recognizer recognize) {
+    private void facePrediction(Recognizer recognize) {
         System.err.println("predicted label: " + recognize.getPredictedLabel());
         System.err.println("The predicted person is: " + recognize.getNameOfPredictedPerson());
         if (predictedPersonName == null){
