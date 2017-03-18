@@ -39,7 +39,7 @@ public class Controller {
     private Image imageOfFace;
     private Rect roi;
     private Mat cropped;
-    private String predictedPersonName = null;
+    private String predictedPersonName = "";
     private Image imageToShow;
     private Recognizer faceRecognizer;
     private int faceSize;
@@ -149,6 +149,7 @@ public class Controller {
     }
 
     private void setCurrentRecognizedPerson(String name) {
+        System.out.println("närdå");
         recognizedLabel.setText(Recognized_LABEL_TEXT + name);
     }
 
@@ -356,24 +357,18 @@ public class Controller {
         return new File(TEST_DIRECTORY).listFiles();
     }
 
-    private void manualRecognizer(String personName) {
+    private void manualRecognizer(String selectedPersonPath) {
         Recognizer manualRecognizer = new Recognizer();
-        manualRecognizer.recognize(TEST_DIRECTORY + personName);
+        manualRecognizer.recognize(TEST_DIRECTORY + selectedPersonPath);
         facePrediction(manualRecognizer);
     }
 
     private void facePrediction(Recognizer recognize) {
         System.err.println("predicted label: " + recognize.getPredictedLabel());
         System.err.println("The predicted person is: " + recognize.getNameOfPredictedPerson());
-        if (predictedPersonName == null){
-            predictedPersonName = recognize.getNameOfPredictedPerson();
-        }
-
-        //Need to do this because we are in another thread so we have to make the uithread change the name.
-        if (!predictedPersonName.equals(recognize.getNameOfPredictedPerson())){
-            predictedPersonName = recognize.getNameOfPredictedPerson();
-            Platform.runLater(() -> setCurrentRecognizedPerson(predictedPersonName));
-        }
+        predictedPersonName = recognize.getNameOfPredictedPerson();
+//        //Need to do this because we are in another thread so we have to make the uithread change the name.
+        Platform.runLater(() -> setCurrentRecognizedPerson(predictedPersonName));
     }
 
     public void setRecognizing() {
