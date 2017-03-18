@@ -104,8 +104,6 @@ public class Recognizer {
             }
             faceRecognizer.train(images, labels);
             faceRecognizer.save(PERSON_SAVE_DATA);
-            System.out.println(faceRecognizer.getThreshold());
-            System.out.println(faceRecognizer.getLabelInfo(predictedLabel));
             dataChanged = false;
         }
     }
