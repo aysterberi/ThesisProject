@@ -5,6 +5,7 @@ public class Constants {
     public static final String Recognized_LABEL_TEXT = "Recognized Person: ";
     public static final String PERSONS_DIRECTORY = "src/main/resources/persons/";
     public static final String TEST_DIRECTORY = "src/main/resources/test/";
+    public static final String DEFAULT_TEST_PERSON = "src/main/resources/test/test.png";
     public static final String PERSON_SAVE_DATA = "src/main/resources/persons/personsdata";
     public static final String PNG_FORMAT = "png";
     public static final String HAAR_CASCADE = "src/main/resources/haarcascade_frontalface_alt2.xml";
