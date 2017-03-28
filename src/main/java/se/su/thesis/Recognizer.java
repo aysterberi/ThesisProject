@@ -5,6 +5,8 @@
 
 package se.su.thesis;
 
+import org.bytedeco.javacpp.DoublePointer;
+import org.bytedeco.javacpp.IntPointer;
 import org.bytedeco.javacpp.opencv_core.Mat;
 
 import java.io.File;
@@ -15,25 +17,33 @@ import java.util.Map;
 import static org.bytedeco.javacpp.opencv_core.CV_32SC1;
 import static org.bytedeco.javacpp.opencv_core.MatVector;
 import static org.bytedeco.javacpp.opencv_face.FaceRecognizer;
-import static org.bytedeco.javacpp.opencv_face.createEigenFaceRecognizer;
+import static org.bytedeco.javacpp.opencv_face.createFisherFaceRecognizer;
 import static org.bytedeco.javacpp.opencv_imgcodecs.CV_LOAD_IMAGE_GRAYSCALE;
 import static org.bytedeco.javacpp.opencv_imgcodecs.imread;
+import static se.su.thesis.utils.Constants.DEFAULT_TEST_PERSON;
+import static se.su.thesis.utils.Constants.PERSONS_DIRECTORY;
 import static se.su.thesis.utils.Constants.PERSON_SAVE_DATA;
 
 public class Recognizer {
+    private double confidence;
     private int predictedLabel;
     private FaceRecognizer faceRecognizer;
     public static boolean dataChanged = true;
+    private double confidenceProcent;
+    private FilenameFilter imageFilter;
     // I used these to try to find best parameters
 //    private double threshhold;
 //    private int firstParameter = 1;
 
     public Recognizer() {
 //        faceRecognizer = createEigenFaceRecognizer(0, THRESH_TRIANGLE);
-        faceRecognizer = createEigenFaceRecognizer(2, 4000);
+//        faceRecognizer = createEigenFaceRecognizer(2, 5000);
+        faceRecognizer = createFisherFaceRecognizer(0, 5000);
 //        faceRecognizer = createEigenFaceRecognizer();
         this.trainOnPictures();
     }
+
+
 
 // This is code for liveStream recognition
 //    public void recognize(BufferedImage pathToTestImage) {
@@ -58,9 +68,20 @@ public class Recognizer {
             }
         }
 
-        predictedLabel = faceRecognizer.predict(testImage);
+//        predictedLabel = faceRecognizer.predict(testImage);
+        IntPointer intPointer = new IntPointer(1);
+        DoublePointer doublePointer = new DoublePointer(1);
+        intPointer.put(-1);
+        doublePointer.put(0.0);
+        faceRecognizer.predict(testImage, intPointer, doublePointer);
+        predictedLabel = intPointer.get();
+        confidence = doublePointer.get();
+        confidenceProcent = Math.floor(((-confidence +1) /100) +100);
 
-        // I used these to try to find best parameters
+        System.out.println("predictedLAbel : " + predictedLabel);
+        System.out.println("confidence : " + confidence);
+        System.out.println("confidenceProcent : " + confidenceProcent);
+// I used these to try to find best parameters
 
 //            if (predictedLabel == 0){
 //                threshhold += 500.0;
@@ -78,7 +99,7 @@ public class Recognizer {
 
     private void trainOnPictures() {
         File[] directories = Controller.getExistingPersons();
-        FilenameFilter imageFilter = (dir, name) -> {
+        imageFilter = (dir, name) -> {
             name = name.toLowerCase();
             return name.endsWith(".jpg") || name.endsWith(".pgm") || name.endsWith(".png");
         };
@@ -113,10 +134,17 @@ public class Recognizer {
     }
 
     public String getNameOfPredictedPerson(){
-        if (predictedLabel == 0){
-            return "Unknown";
+        String recognizedPersonName = getKeyFromValue(Controller.personLabelMap,
+                predictedLabel).toString();
+        if (predictedLabel != 0 && confidenceProcent >= 80){
+           int fileLength = new File(PERSONS_DIRECTORY + recognizedPersonName).listFiles().length;
+            System.out.println(fileLength);
+            if (fileLength <= 35){
+                new TakePicture(DEFAULT_TEST_PERSON, recognizedPersonName);
+            }
+            return recognizedPersonName + " " + confidenceProcent + "%";
         }
-        return getKeyFromValue(Controller.personLabelMap, predictedLabel).toString();
+        return "Unknown";
     }
 
     private int calculateFileLength(File[] directories, FilenameFilter imageFilter) {
