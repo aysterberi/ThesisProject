@@ -265,7 +265,7 @@ public class Controller {
         }
     }
 
-    private int getPictureNumber(String path) {
+    public static int getPictureNumber(String path) {
         File[] files = new File(path).listFiles();
         System.err.println("Files length: " + files.length);
         if (files.length == 0) {
