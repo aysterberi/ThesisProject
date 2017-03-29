@@ -23,6 +23,10 @@ public class TakePicture {
         copyTestPictureToPerson(filePath, currentPerson);
     }
 
+    public TakePicture (String filepath, String personName, String date){
+        logLiveRecognitionPerson(filepath, personName, date);
+    }
+
     public TakePicture(Image image, int pictureNumber, int labelNumber, ImageType type) throws IOException {
         takePicture(image, pictureNumber, labelNumber);
     }
@@ -52,6 +56,21 @@ public class TakePicture {
                 Controller.personLabelMap.get(currentPerson) +
                 "-" + currentPerson.toLowerCase() + "_" + Controller.getPictureNumber
                 (PERSONS_DIRECTORY + currentPerson + "/") + "." + PNG_FORMAT);
+        try {
+            copyFile(source, outputFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void logLiveRecognitionPerson(String filePath, String currentPerson , String date) {
+        String imageName = currentPerson + date;
+        imageName = imageName.replaceAll("/", ".");
+        imageName = imageName.replaceAll(" ", "_");
+        imageName = imageName.replaceAll(":", "-");
+        File source = new File(filePath);
+        File outputFile = new File(LOGGER_DIRECTORY +
+                imageName + "." + PNG_FORMAT);
         try {
             copyFile(source, outputFile);
         } catch (IOException e) {
