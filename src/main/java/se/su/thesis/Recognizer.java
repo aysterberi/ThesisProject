@@ -29,47 +29,32 @@ public class Recognizer {
     private int predictedLabel;
     private FaceRecognizer faceRecognizer;
     public static boolean dataChanged = true;
-    private double confidenceProcent;
+    private double confidencePercent;
     private double confidenceAverage;
     private FilenameFilter imageFilter;
-    // I used these to try to find best parameters
-//    private double threshhold;
-//    private int firstParameter = 1;
 
     public Recognizer() {
 //        faceRecognizer = createEigenFaceRecognizer(0, THRESH_TRIANGLE);
 //        faceRecognizer = createEigenFaceRecognizer(2, 5000);
-        faceRecognizer = createFisherFaceRecognizer(0, 5000);
+        faceRecognizer = createFisherFaceRecognizer(0, RECOGNIZER_THRESHOLD);
 //        faceRecognizer = createEigenFaceRecognizer();
         this.trainOnPictures();
     }
 
-
-
-// This is code for liveStream recognition
-//    public void recognize(BufferedImage pathToTestImage) {
-//        BufferedImage test = TakePicture.cropImage(pathToTestImage);
-
-//    public void recognize(String pathToTestImage) {
-//        Mat testImage = imread(pathToTestImage, CV_LOAD_IMAGE_GRAYSCALE);
-
-    public void recognize(String filepath){
-        // I used these to try to find best parameters
-//        faceRecognizer = createEigenFaceRecognizer(firstParameter, threshhold);
+    public void recognize(String filepath) {
         Mat testImage = imread(filepath, CV_LOAD_IMAGE_GRAYSCALE);
-        if (dataChanged){
+        if (dataChanged) {
             trainOnPictures();
             System.out.println("IF DATACHANGE TRUE");
         } else {
-            if (new File(PERSON_SAVE_DATA).exists()){
+            if (new File(PERSON_SAVE_DATA).exists()) {
                 System.err.println("loading data");
                 faceRecognizer.load(PERSON_SAVE_DATA);
-            }else {
+            } else {
                 trainOnPictures();
             }
         }
 
-//        predictedLabel = faceRecognizer.predict(testImage);
         IntPointer intPointer = new IntPointer(1);
         DoublePointer doublePointer = new DoublePointer(1);
         intPointer.put(-1);
@@ -77,25 +62,11 @@ public class Recognizer {
         faceRecognizer.predict(testImage, intPointer, doublePointer);
         predictedLabel = intPointer.get();
         confidence = doublePointer.get();
-        confidenceProcent = Math.floor(((-confidence +1) /100) +100);
+        confidencePercent = Math.floor(((-confidence + 1) / 100) + 100);
 
         System.out.println("predictedLAbel : " + predictedLabel);
         System.out.println("confidence : " + confidence);
-        System.out.println("confidenceProcent : " + confidenceProcent);
-// I used these to try to find best parameters
-
-//            if (predictedLabel == 0){
-//                threshhold += 500.0;
-//                if (threshhold > 9999.0){
-//                    firstParameter += 1;
-//                    threshhold = 500;
-//                }
-//            } else if (predictedLabel == 2){
-//                System.out.println("Predicted Label " + predictedLabel);
-////                System.out.println(threshhold);
-//                System.out.println(faceRecognizer.getThreshold());
-//                System.out.println(firstParameter);
-//            }
+        System.out.println("confidencePercent : " + confidencePercent);
     }
 
     private void trainOnPictures() {
@@ -134,17 +105,17 @@ public class Recognizer {
         return predictedLabel;
     }
 
-    public String getNameOfPredictedPerson(){
+    public String getNameOfPredictedPerson() {
         String recognizedPersonName = getKeyFromValue(Controller.personLabelMap,
                 predictedLabel).toString();
-        if (predictedLabel != 0 && confidenceProcent >= 80){
-           int fileLength = new File(PERSONS_DIRECTORY + recognizedPersonName).listFiles().length;
+        if (predictedLabel != 0 && confidencePercent >= 80) {
+            int fileLength = new File(PERSONS_DIRECTORY + recognizedPersonName).listFiles().length;
             System.out.println(fileLength);
             logPeoplePassing(recognizedPersonName);
-            if (fileLength <= 35){
+            if (fileLength <= 35) {
                 new TakePicture(DEFAULT_TEST_PERSON, recognizedPersonName);
             }
-            return recognizedPersonName + " " + confidenceProcent + "%";
+            return recognizedPersonName + " " + confidencePercent + "%";
         }
         logPeoplePassing("Unknown");
         return "Unknown";
@@ -169,7 +140,7 @@ public class Recognizer {
         return null;
     }
 
-    public double getAverage(double average, double confidence){
+    public double getAverage(double average, double confidence) {
         return average == 0 ? confidence : (average + confidence) / 2;
     }
 
@@ -178,7 +149,7 @@ public class Recognizer {
         Date date = new Date();
         String dateString = dateFormat.format(date);
         PrintWriter printWriter = null;
-        confidenceAverage = getAverage(confidenceAverage, confidenceProcent);
+        confidenceAverage = getAverage(confidenceAverage, confidencePercent);
         try {
             printWriter = new PrintWriter(new BufferedWriter(new FileWriter
                     (LOGGER_DIRECTORY + "Logger.txt", true)));
@@ -187,7 +158,7 @@ public class Recognizer {
         }
         printWriter.println("Person: " + currentPersonName + "{");
         printWriter.println("\t Date: " + dateString);
-        printWriter.println("\t Confidence: " + confidenceProcent);
+        printWriter.println("\t Confidence: " + confidencePercent);
         printWriter.println("\t Average: " + confidenceAverage);
         printWriter.println("}");
         printWriter.close();

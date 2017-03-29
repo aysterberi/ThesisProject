@@ -91,7 +91,6 @@ public class Controller {
                 Runnable recognizer = () -> {
                     if (faceFound && liveRecognition) {
                         new TakePicture(imageOfFace);
-//                        faceRecognizer.recognize(Utils.matToBufferedImage(cropped));
                         faceRecognizer.recognize("src/main/resources/test/test.png");
                         facePrediction(faceRecognizer);
                     }
@@ -205,9 +204,9 @@ public class Controller {
                     new Scalar(0, 255, 0), 3);
             roi = facesRect.clone();
         }
-        if (faces.toArray().length == 0){
+        if (faces.toArray().length == 0) {
             faceFound = false;
-        }else {
+        } else {
             faceFound = true;
         }
     }
@@ -220,7 +219,7 @@ public class Controller {
             try {
                 this.capture.read(frame);
 
-                if (!frame.empty()){
+                if (!frame.empty()) {
                     faceDetect(frame);
                 }
 
@@ -347,7 +346,6 @@ public class Controller {
             dialog.setHeaderText("Try to recognize someone from the training sets");
             dialog.setContentText("Select the test image to use:");
             Optional<String> result = dialog.showAndWait();
-            //
             result.ifPresent(this::manualRecognizer);
         } else
             System.err.println("No persons in default folder");
@@ -367,7 +365,7 @@ public class Controller {
         System.err.println("predicted label: " + recognize.getPredictedLabel());
         System.err.println("The predicted person is: " + recognize.getNameOfPredictedPerson());
         predictedPersonName = recognize.getNameOfPredictedPerson();
-//        //Need to do this because we are in another thread so we have to make the uithread change the name.
+        // Need to do this because we are in another thread so we have to make the uithread change the name.
         Platform.runLater(() -> setCurrentRecognizedPerson(predictedPersonName));
     }
 

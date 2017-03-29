@@ -19,21 +19,18 @@ public class TakePicture {
         takeTestPicture(image);
     }
 
-    public TakePicture(String filePath, String currentPerson){
+    public TakePicture(String filePath, String currentPerson) {
         copyTestPictureToPerson(filePath, currentPerson);
     }
 
     public TakePicture(Image image, int pictureNumber, int labelNumber, ImageType type) throws IOException {
-            takePicture(image, pictureNumber, labelNumber);
+        takePicture(image, pictureNumber, labelNumber);
     }
 
     private void takeTestPicture(Image image) {
-//        File outputFile = new File(TEST_DIRECTORY + Controller.currentPerson + "."+PNG_FORMAT);
-        File outputFile = new File(TEST_DIRECTORY + "test" + "."+PNG_FORMAT);
+        File outputFile = new File(TEST_DIRECTORY + "test" + "." + PNG_FORMAT);
         try {
             writeFile(image, PNG_FORMAT, outputFile);
-//            System.err.println(outputFile.getAbsolutePath());
-//            System.err.println("Snapped test picture");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -49,14 +46,14 @@ public class TakePicture {
 
 
     private void copyTestPictureToPerson(String filePath, String currentPerson) {
-        File source=new File(filePath);
+        File source = new File(filePath);
         File outputFile = new File(PERSONS_DIRECTORY +
                 currentPerson + "/" +
                 Controller.personLabelMap.get(currentPerson) +
                 "-" + currentPerson.toLowerCase() + "_" + Controller.getPictureNumber
                 (PERSONS_DIRECTORY + currentPerson + "/") + "." + PNG_FORMAT);
         try {
-            copyFile(source,outputFile);
+            copyFile(source, outputFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
