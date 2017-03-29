@@ -146,6 +146,7 @@ public class Recognizer {
             }
             return recognizedPersonName + " " + confidenceProcent + "%";
         }
+        logPeoplePassing("Unknown");
         return "Unknown";
     }
 
