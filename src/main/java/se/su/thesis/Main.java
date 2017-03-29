@@ -35,7 +35,7 @@ public class Main extends Application {
     private int getPersonLabel(String name) {
         String path = PERSONS_DIRECTORY + name;
         File[] files = new File(path).listFiles();
-        if (files != null && files.length > 0){
+        if (files != null && files.length > 0) {
             return Integer.parseInt(files[0].getName().substring(0, 1));
         }
         return 0;
@@ -44,7 +44,7 @@ public class Main extends Application {
     private int getTestPersonLabel(String name) {
         String path = TEST_DIRECTORY + name;
         File[] files = new File(path).listFiles();
-        if (files != null && files.length > 0){
+        if (files != null && files.length > 0) {
             return Integer.parseInt(files[0].getName().substring(0, 1));
         }
         return 0;
