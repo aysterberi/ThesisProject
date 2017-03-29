@@ -1,0 +1,90 @@
+Person: Matt{
+	 Date: 2017/03/29 14:38:43
+	 Confidence: 94.0
+	 Average: 94.0
+}
+Person: Matt{
+	 Date: 2017/03/29 14:38:43
+	 Confidence: 94.0
+	 Average: 94.0
+}
+Person: Matt{
+	 Date: 2017/03/29 14:38:44
+	 Confidence: 92.0
+	 Average: 93.0
+}
+Person: Matt{
+	 Date: 2017/03/29 14:38:44
+	 Confidence: 92.0
+	 Average: 92.5
+}
+Person: Matt{
+	 Date: 2017/03/29 14:38:46
+	 Confidence: 92.0
+	 Average: 92.25
+}
+Person: Matt{
+	 Date: 2017/03/29 14:38:46
+	 Confidence: 92.0
+	 Average: 92.125
+}
+Person: Matt{
+	 Date: 2017/03/29 14:38:47
+	 Confidence: 91.0
+	 Average: 91.5625
+}
+Person: Matt{
+	 Date: 2017/03/29 14:38:47
+	 Confidence: 91.0
+	 Average: 91.28125
+}
+Person: Matt{
+	 Date: 2017/03/29 14:38:49
+	 Confidence: 91.0
+	 Average: 91.140625
+}
+Person: Matt{
+	 Date: 2017/03/29 14:38:49
+	 Confidence: 91.0
+	 Average: 91.0703125
+}
+Person: Matt{
+	 Date: 2017/03/29 14:38:50
+	 Confidence: 91.0
+	 Average: 91.03515625
+}
+Person: Matt{
+	 Date: 2017/03/29 14:38:50
+	 Confidence: 91.0
+	 Average: 91.017578125
+}
+Person: Matt{
+	 Date: 2017/03/29 14:38:52
+	 Confidence: 92.0
+	 Average: 91.5087890625
+}
+Person: Matt{
+	 Date: 2017/03/29 14:38:52
+	 Confidence: 92.0
+	 Average: 91.75439453125
+}
+Person: Matt{
+	 Date: 2017/03/29 14:38:53
+	 Confidence: 95.0
+	 Average: 93.377197265625
+}
+Person: Matt{
+	 Date: 2017/03/29 14:38:53
+	 Confidence: 95.0
+	 Average: 94.1885986328125
+}
+Person: Matt{
+	 Date: 2017/03/29 14:38:55
+	 Confidence: 93.0
+	 Average: 93.59429931640625
+}
+Person: Matt{
+	 Date: 2017/03/29 14:38:55
+	 Confidence: 93.0
+	 Average: 93.29714965820312
+}
