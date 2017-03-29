@@ -9,10 +9,7 @@ import org.bytedeco.javacpp.DoublePointer;
 import org.bytedeco.javacpp.IntPointer;
 import org.bytedeco.javacpp.opencv_core.Mat;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
-import java.io.PrintStream;
+import java.io.*;
 import java.nio.IntBuffer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -179,19 +176,19 @@ public class Recognizer {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
         String dateString = dateFormat.format(date);
-        PrintStream ps = null;
+        PrintWriter printWriter = null;
         confidenceAverage = getAverage(confidenceAverage, confidenceProcent);
         try {
-            ps = new PrintStream("Logger.txt");
-        } catch (FileNotFoundException e) {
+            printWriter = new PrintWriter(new BufferedWriter(new FileWriter
+                    (LOGGER_DIRECTORY + "Logger.txt", true)));
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        ps.println("Person: " + currentPersonName + "{");
-        ps.println("\t Date: " + dateString);
-        ps.println("\t Confidence: " + confidenceProcent);
-        ps.println("\t Average: " + confidenceAverage);
-        ps.println("}");
-        ps.flush();
-        ps.close();
+        printWriter.println("Person: " + currentPersonName + "{");
+        printWriter.println("\t Date: " + dateString);
+        printWriter.println("\t Confidence: " + confidenceProcent);
+        printWriter.println("\t Average: " + confidenceAverage);
+        printWriter.println("}");
+        printWriter.close();
     }
 }
