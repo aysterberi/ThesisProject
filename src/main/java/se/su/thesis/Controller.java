@@ -363,8 +363,8 @@ public class Controller {
 
     private void facePrediction(Recognizer recognize) {
         System.err.println("predicted label: " + recognize.getPredictedLabel());
-        System.err.println("The predicted person is: " + recognize.getNameOfPredictedPerson());
         predictedPersonName = recognize.getNameOfPredictedPerson();
+        System.err.println("The predicted person is: " + predictedPersonName);
         // Need to do this because we are in another thread so we have to make the uithread change the name.
         Platform.runLater(() -> setCurrentRecognizedPerson(predictedPersonName));
     }
