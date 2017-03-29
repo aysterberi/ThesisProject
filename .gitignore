@@ -1,6 +1,7 @@
 target/
 .idea/
 *.iml
+*.log
 src/main/resources/persons/
 src/main/resources/test/*.png
 src/test/
