@@ -10,8 +10,13 @@ import org.bytedeco.javacpp.IntPointer;
 import org.bytedeco.javacpp.opencv_core.Mat;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
+import java.io.PrintStream;
 import java.nio.IntBuffer;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 import static org.bytedeco.javacpp.opencv_core.CV_32SC1;
@@ -20,9 +25,7 @@ import static org.bytedeco.javacpp.opencv_face.FaceRecognizer;
 import static org.bytedeco.javacpp.opencv_face.createFisherFaceRecognizer;
 import static org.bytedeco.javacpp.opencv_imgcodecs.CV_LOAD_IMAGE_GRAYSCALE;
 import static org.bytedeco.javacpp.opencv_imgcodecs.imread;
-import static se.su.thesis.utils.Constants.DEFAULT_TEST_PERSON;
-import static se.su.thesis.utils.Constants.PERSONS_DIRECTORY;
-import static se.su.thesis.utils.Constants.PERSON_SAVE_DATA;
+import static se.su.thesis.utils.Constants.*;
 
 public class Recognizer {
     private double confidence;
@@ -30,6 +33,7 @@ public class Recognizer {
     private FaceRecognizer faceRecognizer;
     public static boolean dataChanged = true;
     private double confidenceProcent;
+    private double confidenceAverage;
     private FilenameFilter imageFilter;
     // I used these to try to find best parameters
 //    private double threshhold;
@@ -139,6 +143,7 @@ public class Recognizer {
         if (predictedLabel != 0 && confidenceProcent >= 80){
            int fileLength = new File(PERSONS_DIRECTORY + recognizedPersonName).listFiles().length;
             System.out.println(fileLength);
+            logPeoplePassing(recognizedPersonName);
             if (fileLength <= 35){
                 new TakePicture(DEFAULT_TEST_PERSON, recognizedPersonName);
             }
@@ -164,5 +169,29 @@ public class Recognizer {
             }
         }
         return null;
+    }
+
+    public double getAverage(double average, double confidence){
+        return average == 0 ? confidence : (average + confidence) / 2;
+    }
+
+    private void logPeoplePassing(String currentPersonName) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        String dateString = dateFormat.format(date);
+        PrintStream ps = null;
+        confidenceAverage = getAverage(confidenceAverage, confidenceProcent);
+        try {
+            ps = new PrintStream("Logger.txt");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        ps.println("Person: " + currentPersonName + "{");
+        ps.println("\t Date: " + dateString);
+        ps.println("\t Confidence: " + confidenceProcent);
+        ps.println("\t Average: " + confidenceAverage);
+        ps.println("}");
+        ps.flush();
+        ps.close();
     }
 }
