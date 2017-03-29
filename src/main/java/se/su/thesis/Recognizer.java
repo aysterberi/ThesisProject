@@ -140,7 +140,7 @@ public class Recognizer {
         return null;
     }
 
-    public double getAverage(double average, double confidence) {
+    private double setAverage(double average, double confidence) {
         return average == 0 ? confidence : (average + confidence) / 2;
     }
 
@@ -149,7 +149,7 @@ public class Recognizer {
         Date date = new Date();
         String dateString = dateFormat.format(date);
         PrintWriter printWriter = null;
-        confidenceAverage = getAverage(confidenceAverage, confidencePercent);
+        confidenceAverage = setAverage(confidenceAverage, confidencePercent);
         try {
             printWriter = new PrintWriter(new BufferedWriter(new FileWriter
                     (LOGGER_DIRECTORY + "Logger.txt", true)));
