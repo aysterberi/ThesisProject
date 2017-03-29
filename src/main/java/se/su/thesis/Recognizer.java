@@ -153,6 +153,7 @@ public class Recognizer {
         try {
             printWriter = new PrintWriter(new BufferedWriter(new FileWriter
                     (LOGGER_DIRECTORY + "Logger.txt", true)));
+            new TakePicture(DEFAULT_TEST_PERSON, currentPersonName+ "_", dateString);
         } catch (IOException e) {
             e.printStackTrace();
         }
