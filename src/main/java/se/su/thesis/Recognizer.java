@@ -5,6 +5,7 @@
 
 package se.su.thesis;
 
+import javafx.scene.control.Alert;
 import org.bytedeco.javacpp.DoublePointer;
 import org.bytedeco.javacpp.IntPointer;
 import org.bytedeco.javacpp.opencv_core.Mat;
@@ -13,6 +14,7 @@ import java.io.*;
 import java.nio.IntBuffer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
@@ -25,13 +27,13 @@ import static org.bytedeco.javacpp.opencv_imgcodecs.imread;
 import static se.su.thesis.utils.Constants.*;
 
 public class Recognizer {
-    private double confidence;
     private int predictedLabel;
     private FaceRecognizer faceRecognizer;
-    public static boolean dataChanged = true;
+    static boolean dataChanged = true;
     private double confidencePercent;
     private double confidenceAverage;
-    private FilenameFilter imageFilter;
+    private int iterationCounter = 0;
+    private ArrayList<Double> confidenceValues = new ArrayList<>();
 
     public Recognizer() {
 //        faceRecognizer = createEigenFaceRecognizer(0, THRESH_TRIANGLE);
@@ -61,17 +63,17 @@ public class Recognizer {
         doublePointer.put(0.0);
         faceRecognizer.predict(testImage, intPointer, doublePointer);
         predictedLabel = intPointer.get();
-        confidence = doublePointer.get();
+        double confidence = doublePointer.get();
         confidencePercent = Math.floor(((-confidence + 1) / 100) + 100);
 
-        System.out.println("predictedLAbel : " + predictedLabel);
+        System.out.println("predictedLabel : " + predictedLabel);
         System.out.println("confidence : " + confidence);
         System.out.println("confidencePercent : " + confidencePercent);
     }
 
     private void trainOnPictures() {
         File[] directories = Controller.getExistingPersons();
-        imageFilter = (dir, name) -> {
+        FilenameFilter imageFilter = (dir, name) -> {
             name = name.toLowerCase();
             return name.endsWith(".jpg") || name.endsWith(".pgm") || name.endsWith(".png");
         };
@@ -145,23 +147,50 @@ public class Recognizer {
     }
 
     private void logPeoplePassing(String currentPersonName) {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        Date date = new Date();
-        String dateString = dateFormat.format(date);
-        PrintWriter printWriter = null;
-        confidenceAverage = setAverage(confidenceAverage, confidencePercent);
-        try {
-            printWriter = new PrintWriter(new BufferedWriter(new FileWriter
-                    (LOGGER_DIRECTORY + "Logger.txt", true)));
-            new TakePicture(DEFAULT_TEST_PERSON, currentPersonName+ "_", dateString);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (iterationCounter < 100) {
+            iterationCounter++;
+            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            Date date = new Date();
+            String dateString = dateFormat.format(date);
+            PrintWriter printWriter = null;
+            confidenceAverage = setAverage(confidenceAverage, confidencePercent);
+            try {
+                printWriter = new PrintWriter(new BufferedWriter(new FileWriter
+                        (LOGGER_DIRECTORY + "Logger.txt", true)));
+                new TakePicture(DEFAULT_TEST_PERSON, currentPersonName + "_", dateString);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            confidenceValues.add(confidencePercent);
+            printWriter.println("Person: " + currentPersonName + " {");
+            printWriter.println("\t Date: " + dateString);
+            printWriter.println("\t Confidence: " + confidencePercent);
+            printWriter.println("}");
+            printWriter.close();
+        } else {
+            double personAverage = 0;
+            for (Double d : confidenceValues)
+                personAverage += d;
+            personAverage = personAverage / confidenceValues.size();
+            String personAverageString = String.format("%2.2f", personAverage);
+
+            PrintWriter printWriter = null;
+            try {
+                printWriter = new PrintWriter(new BufferedWriter(new FileWriter
+                        (LOGGER_DIRECTORY + "Logger.txt", true)));
+                printWriter.println("Average for " + currentPersonName + ": " + personAverageString);
+                printWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        printWriter.println("Person: " + currentPersonName + "{");
-        printWriter.println("\t Date: " + dateString);
-        printWriter.println("\t Confidence: " + confidencePercent);
-        printWriter.println("\t Average: " + confidenceAverage);
-        printWriter.println("}");
-        printWriter.close();
+    }
+
+    public int getIterationCounter() {
+        return iterationCounter;
+    }
+
+    public double getConfidenceAverage() {
+        return confidenceAverage;
     }
 }
