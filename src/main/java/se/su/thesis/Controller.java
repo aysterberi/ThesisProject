@@ -367,6 +367,18 @@ public class Controller {
         System.err.println("The predicted person is: " + predictedPersonName);
         // Need to do this because we are in another thread so we have to make the uithread change the name.
         Platform.runLater(() -> setCurrentRecognizedPerson(predictedPersonName));
+
+//        if (faceRecognizer.getIterationCounter() < 100) {
+//            System.err.println("predicted label: " + recognize.getPredictedLabel());
+//            predictedPersonName = recognize.getNameOfPredictedPerson();
+//            System.err.println("The predicted person is: " + predictedPersonName);
+//            // Need to do this because we are in another thread so we have to make the uithread change the name.
+//            Platform.runLater(() -> setCurrentRecognizedPerson(predictedPersonName));
+//        } else {
+//            liveRecognition = false;
+//            Alert testingDoneAlert = new Alert(Alert.AlertType.INFORMATION);
+//            testingDoneAlert.showAndWait().filter(response -> response == ButtonType.OK).ifPresent(response -> this.recognizeTimer.shutdown());
+//        }
     }
 
     public void setRecognizing() {
