@@ -5,7 +5,6 @@
 
 package se.su.thesis;
 
-import javafx.scene.control.Alert;
 import org.bytedeco.javacpp.DoublePointer;
 import org.bytedeco.javacpp.IntPointer;
 import org.bytedeco.javacpp.opencv_core.Mat;
@@ -63,8 +62,14 @@ public class Recognizer {
         doublePointer.put(0.0);
         faceRecognizer.predict(testImage, intPointer, doublePointer);
         predictedLabel = intPointer.get();
-        double confidence = doublePointer.get();
-        confidencePercent = Math.floor(((-confidence + 1) / 100) + 100);
+        double confidence;
+        if (predictedLabel == 0){
+            confidence = 0;
+            confidencePercent = 0;
+        }else {
+            confidence = doublePointer.get();
+            confidencePercent = Math.floor(((-confidence + 1) / 100) + 100);
+        }
 
         System.out.println("predictedLabel : " + predictedLabel);
         System.out.println("confidence : " + confidence);
@@ -108,9 +113,10 @@ public class Recognizer {
     }
 
     public String getNameOfPredictedPerson() {
-        String recognizedPersonName = getKeyFromValue(Controller.personLabelMap,
-                predictedLabel).toString();
+        String recognizedPersonName;
         if (predictedLabel != 0 && confidencePercent >= 80) {
+            recognizedPersonName = getKeyFromValue(Controller.personLabelMap,
+                    predictedLabel).toString();
             int fileLength = new File(PERSONS_DIRECTORY + recognizedPersonName).listFiles().length;
             System.out.println(fileLength);
             logPeoplePassing(recognizedPersonName);
@@ -118,9 +124,10 @@ public class Recognizer {
                 new TakePicture(DEFAULT_TEST_PERSON, recognizedPersonName);
             }
             return recognizedPersonName + " " + confidencePercent + "%";
+        }else {
+            logPeoplePassing("Unknown");
+            return "Unknown";
         }
-        logPeoplePassing("Unknown");
-        return "Unknown";
     }
 
     private int calculateFileLength(File[] directories, FilenameFilter imageFilter) {
